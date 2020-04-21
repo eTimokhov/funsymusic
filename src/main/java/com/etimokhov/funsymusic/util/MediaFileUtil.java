@@ -12,19 +12,18 @@ import java.io.File;
 import java.io.IOException;
 
 @Component
-public class MediaFileSaver {
+public class MediaFileUtil {
     private final MediaFilesConfigProperties mediaFilesConfig;
 
-    private final Logger LOG = LoggerFactory.getLogger(MediaFileSaver.class);
+    private final Logger LOG = LoggerFactory.getLogger(MediaFileUtil.class);
 
-    public MediaFileSaver(MediaFilesConfigProperties mediaFilesConfig) {
+    public MediaFileUtil(MediaFilesConfigProperties mediaFilesConfig) {
         this.mediaFilesConfig = mediaFilesConfig;
     }
 
     public String saveMp3(byte[] data) throws IOException {
         String fileName = generateRandomFilename("mp3");
-        String path = FilenameUtils.concat(mediaFilesConfig.getMediaStorageDirectory(), mediaFilesConfig.getMp3Directory());
-        path = FilenameUtils.concat(path, fileName);
+        String path = getMediaFileFullPath(fileName);
         FileUtils.writeByteArrayToFile(new File(path), data);
         LOG.info("File {} was successfully saved", path);
         return fileName;
@@ -32,11 +31,15 @@ public class MediaFileSaver {
 
     public String savePng(byte[] data) throws IOException {
         String fileName = generateRandomFilename("png");
-        String path = FilenameUtils.concat(mediaFilesConfig.getMediaStorageDirectory(), mediaFilesConfig.getImagesDirectory());
-        path = FilenameUtils.concat(path, fileName);
+        String path = getMediaFileFullPath(fileName);
         FileUtils.writeByteArrayToFile(new File(path), data);
         LOG.info("File {} was successfully saved", path);
         return fileName;
+    }
+
+    public String getMediaFileFullPath(String fileName) {
+        String path = FilenameUtils.concat(mediaFilesConfig.getMediaStorageDirectory(), mediaFilesConfig.getMp3Directory());
+        return FilenameUtils.concat(path, fileName);
     }
 
     private String generateRandomFilename(String ext) {

@@ -9,4 +9,8 @@ public interface TrackService {
     Track getTrack(Long id);
 
     TrackDto processTrackFileUploading(MultipartFile trackFile) throws CannotSaveFileException;
+
+    Track saveTrack(TrackDto trackDto);
+
+    String getMediaFileFullPath(Long trackId);
 }

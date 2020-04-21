@@ -2,6 +2,7 @@ package com.etimokhov.funsymusic.controller;
 
 import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
+import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.service.TrackService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class TrackUploadController {
         if (bindingResult.hasErrors()) {
             return "saveTrackForm";
         }
-        LOG.info("TRYING TO SAVE VALID TRACK: {}", trackDto);
-        return "redirect:/home";
+        Track track = trackService.saveTrack(trackDto);
+        return "redirect:/track/" + track.getId();
     }
 }

@@ -11,18 +11,18 @@ public class Track {
     private Long id;
     private String artist;
     private String name;
-    private String mediaUrl;
-    private String imageUrl;
+    private String mediaFile;
+    private String imageFile;
     private Integer length;
 
     public Track() {
     }
 
-    public Track(String artist, String name, String mediaUrl, String imageUrl, Integer length) {
+    public Track(String artist, String name, String mediaFile, String imageFile, Integer length) {
         this.artist = artist;
         this.name = name;
-        this.mediaUrl = mediaUrl;
-        this.imageUrl = imageUrl;
+        this.mediaFile = mediaFile;
+        this.imageFile = imageFile;
         this.length = length;
     }
 
@@ -38,12 +38,12 @@ public class Track {
         return name;
     }
 
-    public String getMediaUrl() {
-        return mediaUrl;
+    public String getMediaFile() {
+        return mediaFile;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getImageFile() {
+        return imageFile;
     }
 
     public Integer getLength() {

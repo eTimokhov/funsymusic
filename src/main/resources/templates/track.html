@@ -16,6 +16,10 @@
         <dd th:text="${track.artist}">Rick Astley</dd>
         <dt>Length:</dt>
         <dd th:text="${track.length}">3:22</dd>
+        <audio controls>
+            <source th:src="@{'~/media/audio/' + ${track.getId()}}" type="audio/ogg">
+            Your browser does not support the audio element.
+        </audio>
     </dl>
 
 

@@ -4,7 +4,7 @@ import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.repository.TrackRepository;
-import com.etimokhov.funsymusic.util.MediaFileSaver;
+import com.etimokhov.funsymusic.util.MediaFileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +17,12 @@ import java.io.IOException;
 public class TrackServiceImpl implements TrackService {
     private final Logger LOG = LoggerFactory.getLogger(TrackServiceImpl.class);
 
-    private final MediaFileSaver mediaFileSaver;
+    private final MediaFileUtil mediaFileUtil;
 
     private final TrackRepository trackRepository;
 
-    public TrackServiceImpl(MediaFileSaver mediaFileSaver, TrackRepository trackRepository) {
-        this.mediaFileSaver = mediaFileSaver;
+    public TrackServiceImpl(MediaFileUtil mediaFileUtil, TrackRepository trackRepository) {
+        this.mediaFileUtil = mediaFileUtil;
         this.trackRepository = trackRepository;
     }
 
@@ -49,7 +49,7 @@ public class TrackServiceImpl implements TrackService {
         }
         String mp3FileName;
         try {
-            mp3FileName = mediaFileSaver.saveMp3(trackFile.getBytes());
+            mp3FileName = mediaFileUtil.saveMp3(trackFile.getBytes());
         } catch (IOException e) {
             throw new CannotSaveFileException("Cannot save mp3 file.", e);
         }
@@ -59,5 +59,24 @@ public class TrackServiceImpl implements TrackService {
         trackDto.setMediaFileName(mp3FileName);
         trackDto.setLength(165);
         return trackDto;
+    }
+
+    @Override
+    public Track saveTrack(TrackDto trackDto) {
+        Track track = mapTrackDtoToTrack(trackDto);
+        track = trackRepository.save(track);
+        LOG.info("Track {} was succesfully saved", track.getId());
+        return track;
+    }
+
+    @Override
+    public String getMediaFileFullPath(Long trackId) {
+        Track track = getTrack(trackId);
+        return mediaFileUtil.getMediaFileFullPath(track.getMediaFile());
+    }
+
+    private Track mapTrackDtoToTrack(TrackDto trackDto) {
+        return new Track(trackDto.getArtist(), trackDto.getName(),
+                trackDto.getMediaFileName(), trackDto.getImageFileName(), trackDto.getLength());
     }
 }
