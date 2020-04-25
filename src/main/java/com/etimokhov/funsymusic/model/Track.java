@@ -3,6 +3,7 @@ package com.etimokhov.funsymusic.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Track {
@@ -15,15 +16,19 @@ public class Track {
     private String imageFile;
     private Integer length;
 
+    @ManyToOne
+    private User uploadedBy;
+
     public Track() {
     }
 
-    public Track(String artist, String name, String mediaFile, String imageFile, Integer length) {
+    public Track(String artist, String name, String mediaFile, String imageFile, Integer length, User uploadedBy) {
         this.artist = artist;
         this.name = name;
         this.mediaFile = mediaFile;
         this.imageFile = imageFile;
         this.length = length;
+        this.uploadedBy = uploadedBy;
     }
 
     public Long getId() {
@@ -48,5 +53,13 @@ public class Track {
 
     public Integer getLength() {
         return length;
+    }
+
+    public User getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(User uploadedBy) {
+        this.uploadedBy = uploadedBy;
     }
 }

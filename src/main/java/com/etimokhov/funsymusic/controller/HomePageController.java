@@ -3,10 +3,10 @@ package com.etimokhov.funsymusic.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller("/")
+@Controller
 public class HomePageController {
 
-    @GetMapping
+    @GetMapping(value = {"/", "/home"})
     public String home() {
         return "home";
     }
