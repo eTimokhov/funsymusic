@@ -17,18 +17,18 @@ public class Track {
     private Integer length;
 
     @ManyToOne
-    private User uploadedBy;
+    private User uploader;
 
     public Track() {
     }
 
-    public Track(String artist, String name, String mediaFile, String imageFile, Integer length, User uploadedBy) {
+    public Track(String artist, String name, String mediaFile, String imageFile, Integer length, User uploader) {
         this.artist = artist;
         this.name = name;
         this.mediaFile = mediaFile;
         this.imageFile = imageFile;
         this.length = length;
-        this.uploadedBy = uploadedBy;
+        this.uploader = uploader;
     }
 
     public Long getId() {
@@ -55,11 +55,11 @@ public class Track {
         return length;
     }
 
-    public User getUploadedBy() {
-        return uploadedBy;
+    public User getUploader() {
+        return uploader;
     }
 
-    public void setUploadedBy(User uploadedBy) {
-        this.uploadedBy = uploadedBy;
+    public void setUploader(User uploadedBy) {
+        this.uploader = uploadedBy;
     }
 }

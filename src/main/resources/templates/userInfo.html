@@ -8,21 +8,10 @@
 </head>
 <body>
 <div class="container">
-    <h1>Track</h1>
-    <dl>
-        <dt>Name:</dt>
-        <dd th:text="${track.name}">Never Gonna Give You Up</dd>
-        <dt>Artist:</dt>
-        <dd th:text="${track.artist}">Rick Astley</dd>
-        <dt>Length:</dt>
-        <dd th:text="${track.length}">3:22</dd>
-        <dt>Uploaded by:</dt>
-        <dd><a th:text="${track.uploader?.username ?: 'Deleted user'}" th:href="@{~/user/{id}(id = ${track.uploader?.id})}">John Doe</a></dd>
-        <audio controls>
-            <source th:src="@{~/media/audio/{id}(id = ${track.id})}" type="audio/ogg">
-            Your browser does not support the audio element.
-        </audio>
-    </dl>
+    <h1 th:text="${user.username}"></h1>
+    <ul th:each="track : ${uploadedTracks}">
+        <li><a th:href="@{~/track/{id}(id = ${track.id})}" th:text="${track.name}"></a></li>
+    </ul>
 
 
 </div>

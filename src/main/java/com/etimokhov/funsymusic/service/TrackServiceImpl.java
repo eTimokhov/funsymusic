@@ -2,7 +2,9 @@ package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
+import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.Track;
+import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.TrackRepository;
 import com.etimokhov.funsymusic.util.MediaFileUtil;
 import org.apache.commons.io.FilenameUtils;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class TrackServiceImpl implements TrackService {
@@ -28,7 +31,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public Track getTrack(Long id) {
-        return trackRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Track " + id + " not found"));
+        return trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track " + id + " not found"));
     }
 
     /**
@@ -62,8 +65,9 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public Track saveTrack(TrackDto trackDto) {
+    public Track saveTrack(TrackDto trackDto, User uploadedBy) {
         Track track = mapTrackDtoToTrack(trackDto);
+        track.setUploader(uploadedBy);
         track = trackRepository.save(track);
         LOG.info("Track {} was succesfully saved", track.getId());
         return track;
@@ -75,8 +79,13 @@ public class TrackServiceImpl implements TrackService {
         return mediaFileUtil.getMediaFileFullPath(track.getMediaFile());
     }
 
+    @Override
+    public List<Track> findAllByUploader(Long userId) {
+        return trackRepository.findByUploaderId(userId);
+    }
+
     private Track mapTrackDtoToTrack(TrackDto trackDto) {
         return new Track(trackDto.getArtist(), trackDto.getName(),
-                trackDto.getMediaFileName(), trackDto.getImageFileName(), trackDto.getLength());
+                trackDto.getMediaFileName(), trackDto.getImageFileName(), trackDto.getLength(), null);
     }
 }

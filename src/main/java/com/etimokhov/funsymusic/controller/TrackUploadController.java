@@ -3,7 +3,9 @@ package com.etimokhov.funsymusic.controller;
 import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
 import com.etimokhov.funsymusic.model.Track;
+import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.TrackService;
+import com.etimokhov.funsymusic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class TrackUploadController {
@@ -26,8 +29,11 @@ public class TrackUploadController {
 
     private final TrackService trackService;
 
-    public TrackUploadController(TrackService trackService) {
+    private final UserService userService;
+
+    public TrackUploadController(TrackService trackService, UserService userService) {
         this.trackService = trackService;
+        this.userService = userService;
     }
 
 //    @ModelAttribute
@@ -56,11 +62,13 @@ public class TrackUploadController {
     }
 
     @PostMapping("/uploadTrack/save")
-    public String uploadTrack(@Valid @ModelAttribute("track") TrackDto trackDto, BindingResult bindingResult, Model model) {
+    public String uploadTrack(@Valid @ModelAttribute("track") TrackDto trackDto, BindingResult bindingResult, Principal principal, Model model) {
         if (bindingResult.hasErrors()) {
             return "saveTrackForm";
         }
-        Track track = trackService.saveTrack(trackDto);
+        User currentUser = userService.findByUsername(principal.getName());
+        Track track = trackService.saveTrack(trackDto, currentUser);
+        LOG.info("{}, {}", principal, principal.getName());
         return "redirect:/track/" + track.getId();
     }
 }

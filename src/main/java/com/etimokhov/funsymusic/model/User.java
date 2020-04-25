@@ -5,9 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,9 +23,6 @@ public class User {
     private Set<Role> roles;
 
     private String imageUrl;
-
-    @OneToMany
-    private List<Playlist> playlists;
 
     public long getId() {
         return id;
@@ -75,13 +70,5 @@ public class User {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public List<Playlist> getPlaylists() {
-        return playlists;
-    }
-
-    public void setPlaylists(List<Playlist> playlists) {
-        this.playlists = playlists;
     }
 }

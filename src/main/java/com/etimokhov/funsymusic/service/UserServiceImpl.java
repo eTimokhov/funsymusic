@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.RoleRepository;
 import com.etimokhov.funsymusic.repository.UserRepository;
@@ -35,5 +36,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User " + id + " not found"));
     }
 }
