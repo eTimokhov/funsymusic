@@ -16,7 +16,7 @@ public class TrackPageController {
     }
 
     @GetMapping("/track/{trackId}")
-    public String hello(@PathVariable Long trackId, Model model) {
+    public String getTrack(@PathVariable Long trackId, Model model) {
         model.addAttribute("track", trackService.getTrack(trackId));
         return "track";
     }

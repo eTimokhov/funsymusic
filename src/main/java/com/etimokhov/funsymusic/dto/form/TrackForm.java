@@ -1,8 +1,8 @@
-package com.etimokhov.funsymusic.dto;
+package com.etimokhov.funsymusic.dto.form;
 
 import javax.validation.constraints.NotBlank;
 
-public class TrackDto {
+public class TrackForm {
     @NotBlank
     private String name;
 

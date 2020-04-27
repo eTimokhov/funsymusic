@@ -1,8 +1,8 @@
 package com.etimokhov.funsymusic.controller;
 
 import com.etimokhov.funsymusic.model.User;
-import com.etimokhov.funsymusic.service.SecurityService;
 import com.etimokhov.funsymusic.service.UserService;
+import com.etimokhov.funsymusic.service.auth.SecurityService;
 import com.etimokhov.funsymusic.validation.UserValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

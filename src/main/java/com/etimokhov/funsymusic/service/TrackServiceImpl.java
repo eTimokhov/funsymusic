@@ -1,6 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
-import com.etimokhov.funsymusic.dto.TrackDto;
+import com.etimokhov.funsymusic.dto.form.TrackForm;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
 import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.Track;
@@ -40,7 +40,7 @@ public class TrackServiceImpl implements TrackService {
      * @throws IllegalArgumentException if file is invalid
      */
     @Override
-    public TrackDto processTrackFileUploading(MultipartFile trackFile) throws CannotSaveFileException {
+    public TrackForm processTrackFileUploading(MultipartFile trackFile) throws CannotSaveFileException {
         //TODO: parse mp3 file with tag extractor (e.g. Apache Tika);
         // validate it; save media files locally;
         // get meta data (length, name, artist, image);
@@ -56,20 +56,20 @@ public class TrackServiceImpl implements TrackService {
         } catch (IOException e) {
             throw new CannotSaveFileException("Cannot save mp3 file.", e);
         }
-        TrackDto trackDto = new TrackDto();
-        trackDto.setName(FilenameUtils.getBaseName(fileName));
-        trackDto.setArtist("Random_artist");
-        trackDto.setMediaFileName(mp3FileName);
-        trackDto.setLength(165);
-        return trackDto;
+        TrackForm trackForm = new TrackForm();
+        trackForm.setName(FilenameUtils.getBaseName(fileName));
+        trackForm.setArtist("Random_artist");
+        trackForm.setMediaFileName(mp3FileName);
+        trackForm.setLength(165);
+        return trackForm;
     }
 
     @Override
-    public Track saveTrack(TrackDto trackDto, User uploadedBy) {
-        Track track = mapTrackDtoToTrack(trackDto);
+    public Track saveTrack(TrackForm trackForm, User uploadedBy) {
+        Track track = mapTrackDtoToTrack(trackForm);
         track.setUploader(uploadedBy);
         track = trackRepository.save(track);
-        LOG.info("Track {} was succesfully saved", track.getId());
+        LOG.info("Track {} was successfully saved", track.getId());
         return track;
     }
 
@@ -84,8 +84,8 @@ public class TrackServiceImpl implements TrackService {
         return trackRepository.findByUploaderId(userId);
     }
 
-    private Track mapTrackDtoToTrack(TrackDto trackDto) {
-        return new Track(trackDto.getArtist(), trackDto.getName(),
-                trackDto.getMediaFileName(), trackDto.getImageFileName(), trackDto.getLength(), null);
+    private Track mapTrackDtoToTrack(TrackForm trackForm) {
+        return new Track(trackForm.getArtist(), trackForm.getName(),
+                trackForm.getMediaFileName(), trackForm.getImageFileName(), trackForm.getLength(), null);
     }
 }

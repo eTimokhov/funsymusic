@@ -1,23 +1,31 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Hello, world!</title>
+    <th:block th:include="fragments/general.html :: head"/>
+    <title th:text="${track.name}">Track</title>
+    <meta id="data" th:attr="
+        data-trackId=${track.id},
+        data-getPlaylistsUrl=@{~/playlist/trackInPlaylists},
+        data-addTrackUrl=@{~/playlist/addTrack},
+        data-removeTrackUrl=@{~/playlist/removeTrack}
+    "/>
+    <script th:src="@{~/js/addTrackInPlaylist.js}"></script>
 </head>
 <body>
 <div class="container">
+
+
     <h1>Track</h1>
     <dl>
         <dt>Name:</dt>
         <dd th:text="${track.name}">Never Gonna Give You Up</dd>
         <dt>Artist:</dt>
+
         <dd th:text="${track.artist}">Rick Astley</dd>
         <dt>Length:</dt>
         <dd th:text="${track.length}">3:22</dd>
         <dt>Uploaded by:</dt>
-        <dd><a th:text="${track.uploader?.username ?: 'Deleted user'}" th:href="@{~/user/{id}(id = ${track.uploader?.id})}">John Doe</a></dd>
+        <dd><a th:text="${track.uploader?.username ?: 'Deleted user'}" th:href="@{~/user/{id}(id = ${track.uploader?.username})}">John Doe</a></dd>
         <audio controls>
             <source th:src="@{~/media/audio/{id}(id = ${track.id})}" type="audio/ogg">
             Your browser does not support the audio element.
@@ -25,9 +33,12 @@
     </dl>
 
 
+    <div th:unless="${currentUser == null}">
+        <button id="playlistsWithTrackToggle" type="button" class="btn btn-outline-info">Info</button>
+        <ul id="playlistsWithTrack"></ul>
+    </div>
+
+
 </div>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

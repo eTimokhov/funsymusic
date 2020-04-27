@@ -1,4 +1,4 @@
-package com.etimokhov.funsymusic.service;
+package com.etimokhov.funsymusic.service.auth;
 
 public interface SecurityService {
     String findLoggedInUsername();

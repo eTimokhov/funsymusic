@@ -2,12 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:include="fragments/general.html :: head"/>
-    <title th:text="${user.username}">Home page</title>
+    <title th:text="${playlist.name}">Playlist</title>
 </head>
 <body>
 <div class="container">
-    <h1 th:text="${user.username}"></h1>
-    <ul th:each="track : ${uploadedTracks}">
+    <h1>Playlist</h1>
+    <dl>
+        <dt>Name:</dt>
+        <dd th:text="${playlist.name}">Chill music</dd>
+    </dl>
+    <p th:if="${#lists.isEmpty(playlist.tracks)}">This playlist is empty.</p>
+    <ul th:each="track: ${playlist.tracks}">
         <li><a th:href="@{~/track/{id}(id = ${track.id})}" th:text="${track.name}"></a></li>
     </ul>
 

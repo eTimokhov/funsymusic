@@ -1,4 +1,4 @@
-package com.etimokhov.funsymusic.service;
+package com.etimokhov.funsymusic.service.auth;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
