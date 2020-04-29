@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,13 +22,22 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final PlaylistRepository playlistRepository;
 
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository) {
+    private final TrackService trackService;
+
+
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackService trackService) {
         this.playlistRepository = playlistRepository;
+        this.trackService = trackService;
     }
 
     @Override
     public Playlist getPlaylist(Long id) {
         return playlistRepository.findById(id).orElseThrow(() -> new NotFoundException("Playlist #" + id + " not found"));
+    }
+
+    @Override
+    public Playlist getPlaylistWithTracks(Long id) {
+        return playlistRepository.findOneWithTracksById(id).orElseThrow(() -> new NotFoundException("Playlist #" + id + " not found"));
     }
 
     @Override
@@ -76,6 +86,21 @@ public class PlaylistServiceImpl implements PlaylistService {
                         pl -> new IsTrackInPlaylistDto(pl.getId(), pl.getName(), playlistContainsTrack(pl, track))
                 )
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Track> getTracks(Long playlistId) {
+        //TODO: implementation
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void updatePlaylist(Playlist playlist, List<Long> trackIds) {
+        List<Track> tracks = trackIds.stream()
+                .map(trackService::getTrack)
+                .collect(Collectors.toList());
+        playlist.setTracks(tracks);
+        playlistRepository.save(playlist);
     }
 
     private boolean playlistContainsTrack(Playlist playlist, Track track) {

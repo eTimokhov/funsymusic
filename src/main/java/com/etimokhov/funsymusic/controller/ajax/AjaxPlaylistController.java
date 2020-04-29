@@ -1,7 +1,9 @@
 package com.etimokhov.funsymusic.controller.ajax;
 
 import com.etimokhov.funsymusic.dto.IsTrackInPlaylistDto;
+import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.TrackInPlaylistDto;
+import com.etimokhov.funsymusic.dto.UpdatePlaylistDto;
 import com.etimokhov.funsymusic.model.Playlist;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AjaxPlaylistController {
@@ -65,5 +68,26 @@ public class AjaxPlaylistController {
         User currentUser = userService.getCurrentUser(principal);
         Track track = trackService.getTrack(trackId);
         return playlistService.checkTrackPresenceInUserPlaylists(track, currentUser);
+    }
+
+    @GetMapping("/playlist/getTracks")
+    public List<TrackDto> getTracks(@RequestParam Long playlistId) {
+        Playlist playlist = playlistService.getPlaylistWithTracks(playlistId);
+        return playlist.getTracks().stream()
+                .map(trackService::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    @PostMapping("/playlist/savePlaylist")
+    public ResponseEntity<String> savePlaylist(@RequestBody UpdatePlaylistDto updatePlaylistDto, Principal principal) {
+        User currentUser = userService.getCurrentUser(principal);
+        Playlist playlist = playlistService.getPlaylist(updatePlaylistDto.getPlaylistId());
+        if (!playlistService.isPlaylistOwner(playlist, currentUser)) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("You are not permitted to modify this playlist");
+        }
+        playlistService.updatePlaylist(playlist, updatePlaylistDto.getTrackIds());
+        return ResponseEntity.ok().build();
     }
 }

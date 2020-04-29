@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.form.TrackForm;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
 import com.etimokhov.funsymusic.exception.NotFoundException;
@@ -82,6 +83,18 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public List<Track> findAllByUploader(Long userId) {
         return trackRepository.findByUploaderId(userId);
+    }
+
+    @Override
+    public TrackDto mapToDto(Track track) {
+        return new TrackDto(
+                track.getId(),
+                track.getName(),
+                track.getArtist(),
+                track.getLength(),
+                track.getMediaFile(),
+                track.getImageFile()
+        );
     }
 
     private Track mapTrackDtoToTrack(TrackForm trackForm) {

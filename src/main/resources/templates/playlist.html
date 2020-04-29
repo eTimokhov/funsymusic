@@ -3,6 +3,12 @@
 <head>
     <th:block th:include="fragments/general.html :: head"/>
     <title th:text="${playlist.name}">Playlist</title>
+    <meta id="data" th:attr="
+        data-playlistId=${playlist.id},
+        data-savePlaylistUrl=@{~/playlist/savePlaylist},
+        data-getTracksUrl=@{~/playlist/getTracks},
+        data-trackUrl=@{~/track/}
+    "/>
 </head>
 <body>
 <div class="container">
@@ -12,11 +18,14 @@
         <dd th:text="${playlist.name}">Chill music</dd>
     </dl>
     <p th:if="${#lists.isEmpty(playlist.tracks)}">This playlist is empty.</p>
-    <ul th:each="track: ${playlist.tracks}">
-        <li><a th:href="@{~/track/{id}(id = ${track.id})}" th:text="${track.name}"></a></li>
-    </ul>
-
+    <ul id="trackList" class="list-group"></ul>
+    <div th:if="${playlist.owner == currentUser}">
+        <button id="editPlaylistBtn" class="btn btn-info">Edit</button>
+        <button id="cancelEditingBtn" class="btn btn-secondary">Cancel</button>
+        <button id="savePlaylistBtn" class="btn btn-success">Save</button>
+    </div>
 
 </div>
+<script th:src="@{~/js/playlist.js}"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.form.TrackForm;
 import com.etimokhov.funsymusic.exception.CannotSaveFileException;
 import com.etimokhov.funsymusic.model.Track;
@@ -18,4 +19,6 @@ public interface TrackService {
     String getMediaFileFullPath(Long trackId);
 
     List<Track> findAllByUploader(Long userId);
+
+    TrackDto mapToDto(Track track);
 }
