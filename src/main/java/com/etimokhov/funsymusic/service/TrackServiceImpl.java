@@ -9,12 +9,24 @@ import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.TrackRepository;
 import com.etimokhov.funsymusic.util.MediaFileUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
+import org.apache.tika.metadata.XMPDM;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.parser.mp3.Mp3Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -42,27 +54,48 @@ public class TrackServiceImpl implements TrackService {
      */
     @Override
     public TrackForm processTrackFileUploading(MultipartFile trackFile) throws CannotSaveFileException {
-        //TODO: parse mp3 file with tag extractor (e.g. Apache Tika);
-        // validate it; save media files locally;
-        // get meta data (length, name, artist, image);
-        // return form for further fulfilling;
         String fileName = trackFile.getOriginalFilename();
         String fileExtension = FilenameUtils.getExtension(fileName);
         if (fileExtension == null || !fileExtension.equals("mp3")) {
             throw new CannotSaveFileException("Invalid file extension. Supported extension: mp3");
         }
         String mp3FileName;
+        byte[] mp3FileBytes = new byte[0];
         try {
-            mp3FileName = mediaFileUtil.saveMp3(trackFile.getBytes());
+            mp3FileBytes = trackFile.getBytes();
+        } catch (IOException e) {
+            throw new CannotSaveFileException(e);
+        }
+        TrackForm trackForm = new TrackForm();
+        fillTrackFormWithMp3Metadata(trackForm, mp3FileBytes);
+        try {
+            mp3FileName = mediaFileUtil.saveMp3(mp3FileBytes);
         } catch (IOException e) {
             throw new CannotSaveFileException("Cannot save mp3 file.", e);
         }
-        TrackForm trackForm = new TrackForm();
-        trackForm.setName(FilenameUtils.getBaseName(fileName));
-        trackForm.setArtist("Random_artist");
         trackForm.setMediaFileName(mp3FileName);
-        trackForm.setLength(165);
         return trackForm;
+    }
+
+    private void fillTrackFormWithMp3Metadata(TrackForm trackForm, byte[] mp3File) {
+        ContentHandler handler = new DefaultHandler();
+        Metadata metadata = new Metadata();
+        Parser parser = new Mp3Parser();
+        ParseContext parseCtx = new ParseContext();
+
+        try (InputStream input = new ByteArrayInputStream(mp3File)) {
+            parser.parse(input, handler, metadata, parseCtx);
+        } catch (SAXException | TikaException | IOException e) {
+            throw new CannotSaveFileException(e);
+        }
+        String xmPdmDuration = metadata.get(XMPDM.DURATION);
+        if (xmPdmDuration == null) {
+            throw new CannotSaveFileException("Cannot save file: cannot extract duration.");
+        }
+        int durationSeconds = (int) (Double.parseDouble(xmPdmDuration) / 1000);
+        trackForm.setName(metadata.get(TikaCoreProperties.TITLE));
+        trackForm.setArtist(metadata.get(TikaCoreProperties.CREATOR));
+        trackForm.setLength(durationSeconds);
     }
 
     @Override
