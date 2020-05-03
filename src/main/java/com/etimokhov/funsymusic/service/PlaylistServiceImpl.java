@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         Playlist playlist = new Playlist();
         playlist.setName(playlistForm.getName());
         playlist.setOwner(owner);
+        playlist.setCreateDate(new Date());
         playlist = playlistRepository.save(playlist);
         LOG.info("Playlist #{}: {} was successfully created", playlist.getId(), playlist.getName());
         return playlistRepository.save(playlist);

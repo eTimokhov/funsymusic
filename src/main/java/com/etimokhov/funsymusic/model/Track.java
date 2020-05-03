@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.util.Date;
 
 @Entity
 public class Track {
@@ -14,6 +15,8 @@ public class Track {
     private String name;
     private String mediaFile;
     private Integer length;
+
+    private Date uploadDate;
 
     @ManyToOne
     private User uploader;
@@ -55,5 +58,13 @@ public class Track {
 
     public void setUploader(User uploadedBy) {
         this.uploader = uploadedBy;
+    }
+
+    public Date getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
     }
 }

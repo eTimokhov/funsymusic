@@ -1,24 +1,26 @@
-let pageData = $('#data');
-let playlistId = pageData.attr('data-playlistId');
-let trackList = $('#trackList');
-
 $(function() {
-    $('#savePlaylistBtn').hide();
-    $('#cancelEditingBtn').hide();
+    let savePlaylistBtn = $('#savePlaylistBtn');
+    let cancelEditingBtn = $('#cancelEditingBtn');
+    let trackList = $('#trackList');
+
+    savePlaylistBtn.hide();
+    cancelEditingBtn.hide();
     loadTracks();
 
-    $("#trackList").sortable();
-    $("#trackList").sortable("disable");
+    trackList.sortable();
+    trackList.sortable("disable");
 
     $('#editPlaylistBtn').click(activateEdit);
-    $('#cancelEditingBtn').click(cancelEditing);
-    $('#savePlaylistBtn').click(sendPlaylist);
+    savePlaylistBtn.click(sendPlaylist);
+    cancelEditingBtn.click(cancelEditing);
 });
 
 
 function loadTracks() {
-    trackList.empty();
-    let getTracksUrl = pageData.attr('data-getTracksUrl');
+    $('#trackList').empty();
+    let data = $('#data');
+    let playlistId = data.attr('data-playlistId');
+    let getTracksUrl = data.attr('data-getTracksUrl');
     $.ajax({
         url: getTracksUrl,
         type: 'get',
@@ -31,7 +33,7 @@ function loadTracks() {
 
 function renderTracks(tracks) {
     let trackList = $('#trackList');
-    let trackUrl = pageData.attr('data-trackUrl');
+    let trackUrl = $('#data').attr('data-trackUrl');
     for (const track of tracks) {
         trackList.append(
             $('<li/>', {
@@ -80,8 +82,9 @@ function cancelEditing() {
 }
 
 function sendPlaylist() {
-    let savePlaylistUrl = pageData.attr('data-savePlaylistUrl');
-
+    let data = $('#data');
+    let savePlaylistUrl = data.attr('data-savePlaylistUrl');
+    let playlistId = data.attr('data-playlistId')
     let updatePlaylistDto = {
         playlistId: parseInt(playlistId),
         trackIds: []

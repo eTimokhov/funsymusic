@@ -7,39 +7,61 @@
         data-trackId=${track.id},
         data-getPlaylistsUrl=@{~/playlist/trackInPlaylists},
         data-addTrackUrl=@{~/playlist/addTrack},
-        data-removeTrackUrl=@{~/playlist/removeTrack}
+        data-removeTrackUrl=@{~/playlist/removeTrack},
+        data-getCommentsUrl=@{~/track/comments},
+        data-addCommentUrl=@{~/track/addComment}
     "/>
-    <script th:src="@{~/js/addTrackInPlaylist.js}"></script>
+    <!--    <script th:src="@{~/js/addTrackInPlaylist.js}"></script>-->
 </head>
 <body>
 <div class="container">
 
 
-    <h1>Track</h1>
-    <dl>
-        <dt>Name:</dt>
-        <dd th:text="${track.name}">Never Gonna Give You Up</dd>
-        <dt>Artist:</dt>
+    <div class="row"><h1>Track</h1></div>
+    <div class="row">
+        <dl>
+            <dt>Name:</dt>
+            <dd th:text="${track.name}">Never Gonna Give You Up</dd>
+            <dt>Artist:</dt>
 
-        <dd th:text="${track.artist}">Rick Astley</dd>
-        <dt>Length:</dt>
-        <dd th:text="${track.length}">3:22</dd>
-        <dt>Uploaded by:</dt>
-        <dd><a th:text="${track.uploader?.username ?: 'Deleted user'}" th:href="@{~/user/{id}(id = ${track.uploader?.username})}">John Doe</a></dd>
-        <audio controls>
-            <source th:src="@{~/media/audio/{id}(id = ${track.id})}" type="audio/ogg">
-            Your browser does not support the audio element.
-        </audio>
-    </dl>
+            <dd th:text="${track.artist}">Rick Astley</dd>
+            <dt>Length:</dt>
+            <dd th:text="${track.length}">3:22</dd>
+            <dt>Uploaded by:</dt>
+            <dd><a th:text="${track.uploader?.username ?: 'Deleted user'}"
+                   th:href="@{~/user/{id}(id = ${track.uploader?.username})}">John Doe</a></dd>
+            <audio controls>
+                <source th:src="@{~/media/audio/{id}(id = ${track.id})}" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+        </dl>
+    </div>
 
 
-    <div th:unless="${currentUser == null}">
-        <button id="playlistsWithTrackToggle" type="button" class="btn btn-outline-info">Info</button>
+    <div class="row" th:unless="${currentUser == null}">
+        <button id="playlistsWithTrackToggle" type="button" class="btn btn-outline-info">Add to playlists</button>
         <ul id="playlistsWithTrack"></ul>
+    </div>
+
+    <div class="row">
+        <div th:unless="${currentUser == null}">
+            <p>Leave comment.</p>
+            <form id="addCommentForm">
+                <div class="form-group">
+                    <label for="commentTextarea">Leave your comment</label>
+                    <textarea class="form-control" id="commentTextarea" rows="3" name="text"></textarea>
+                    <input type="hidden" name="trackId" th:value="${track.id}"/>
+                </div>
+            </form>
+            <button id="addCommentBtn" class="btn btn-primary">Save</button>
+        </div>
+        <p>Comments</p>
+        <ul id="commentSection"></ul>
     </div>
 
 
 </div>
-<script th:src="@{~/js/playlist.js}"></script>
+<script th:src="@{~/js/addTrackInPlaylist.js}"></script>
+<script th:src="@{~/js/comments.js}"></script>
 </body>
 </html>

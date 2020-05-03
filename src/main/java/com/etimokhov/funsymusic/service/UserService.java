@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.dto.UserDto;
 import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
@@ -17,6 +18,8 @@ public interface UserService {
     User getCurrentUser(Principal principal) throws NotAuthenticatedException;
 
     User findCurrentUser(Principal principal);
+
+    UserDto mapToDto(User user);
 
     User getById(Long id);
 

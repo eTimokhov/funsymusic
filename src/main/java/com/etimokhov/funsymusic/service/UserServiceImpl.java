@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.dto.UserDto;
 import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
@@ -71,6 +72,15 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return findByUsername(principal.getName());
+    }
+
+    @Override
+    public UserDto mapToDto(User user) {
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setId(user.getId());
+        userDto.setImage(user.getImage());
+        return userDto;
     }
 
     @Override

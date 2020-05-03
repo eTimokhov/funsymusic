@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,6 +22,8 @@ public class Playlist {
     @ManyToMany
     @OrderColumn
     private List<Track> tracks;
+
+    private Date createDate;
 
     public Long getId() {
         return id;
@@ -52,5 +55,13 @@ public class Playlist {
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

@@ -27,6 +27,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -102,6 +103,7 @@ public class TrackServiceImpl implements TrackService {
     public Track saveTrack(TrackForm trackForm, User uploadedBy) {
         Track track = mapTrackDtoToTrack(trackForm);
         track.setUploader(uploadedBy);
+        track.setUploadDate(new Date());
         track = trackRepository.save(track);
         LOG.info("Track {} was successfully saved", track.getId());
         return track;

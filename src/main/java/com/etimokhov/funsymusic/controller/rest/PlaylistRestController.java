@@ -1,4 +1,4 @@
-package com.etimokhov.funsymusic.controller.ajax;
+package com.etimokhov.funsymusic.controller.rest;
 
 import com.etimokhov.funsymusic.dto.IsTrackInPlaylistDto;
 import com.etimokhov.funsymusic.dto.TrackDto;
@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class AjaxPlaylistController {
+public class PlaylistRestController {
 
     private final PlaylistService playlistService;
     private final TrackService trackService;
     private final UserService userService;
 
-    public AjaxPlaylistController(PlaylistService playlistService, TrackService trackService, UserService userService) {
+    public PlaylistRestController(PlaylistService playlistService, TrackService trackService, UserService userService) {
         this.playlistService = playlistService;
         this.trackService = trackService;
         this.userService = userService;
