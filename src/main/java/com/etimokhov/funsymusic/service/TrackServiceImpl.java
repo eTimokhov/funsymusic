@@ -125,13 +125,12 @@ public class TrackServiceImpl implements TrackService {
                 track.getName(),
                 track.getArtist(),
                 track.getLength(),
-                track.getMediaFile(),
-                track.getImageFile()
+                track.getMediaFile()
         );
     }
 
     private Track mapTrackDtoToTrack(TrackForm trackForm) {
         return new Track(trackForm.getArtist(), trackForm.getName(),
-                trackForm.getMediaFileName(), trackForm.getImageFileName(), trackForm.getLength(), null);
+                trackForm.getMediaFileName(), trackForm.getLength(), null);
     }
 }

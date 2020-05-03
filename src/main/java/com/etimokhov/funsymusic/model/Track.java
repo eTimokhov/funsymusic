@@ -13,7 +13,6 @@ public class Track {
     private String artist;
     private String name;
     private String mediaFile;
-    private String imageFile;
     private Integer length;
 
     @ManyToOne
@@ -22,11 +21,10 @@ public class Track {
     public Track() {
     }
 
-    public Track(String artist, String name, String mediaFile, String imageFile, Integer length, User uploader) {
+    public Track(String artist, String name, String mediaFile, Integer length, User uploader) {
         this.artist = artist;
         this.name = name;
         this.mediaFile = mediaFile;
-        this.imageFile = imageFile;
         this.length = length;
         this.uploader = uploader;
     }
@@ -45,10 +43,6 @@ public class Track {
 
     public String getMediaFile() {
         return mediaFile;
-    }
-
-    public String getImageFile() {
-        return imageFile;
     }
 
     public Integer getLength() {

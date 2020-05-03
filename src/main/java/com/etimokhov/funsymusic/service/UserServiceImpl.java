@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.User;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashSet;
 
 @Service
@@ -28,11 +30,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<>(roleRepository.findAll()));
+    public User save(UserForm userForm) {
+        User user = new User();
+        user.setUsername(userForm.getUsername());
+        user.setPassword(bCryptPasswordEncoder.encode(userForm.getPassword()));
+        user.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByName("USER"))));
         userRepository.save(user);
         LOG.info("New user #{}, {}:{} saved.", user.getId(), user.getUsername(), user.getPassword());
+        return user;
     }
 
     @Override

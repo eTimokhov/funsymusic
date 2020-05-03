@@ -1,6 +1,6 @@
 package com.etimokhov.funsymusic.controller;
 
-import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.service.UserService;
 import com.etimokhov.funsymusic.service.auth.SecurityService;
 import com.etimokhov.funsymusic.validation.UserValidator;
@@ -27,13 +27,13 @@ public class UserController {
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        model.addAttribute("userForm", new User());
+        model.addAttribute("userForm", new UserForm());
 
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+    public String registration(@ModelAttribute("userForm") UserForm userForm, BindingResult bindingResult) {
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {

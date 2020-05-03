@@ -13,8 +13,6 @@ public class TrackForm {
     @NotBlank
     private String mediaFileName;
 
-    private String imageFileName;
-
     public String getName() {
         return name;
     }
@@ -39,14 +37,6 @@ public class TrackForm {
         this.mediaFileName = mediaFileName;
     }
 
-    public String getImageFileName() {
-        return imageFileName;
-    }
-
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
-    }
-
     public Integer getLength() {
         return length;
     }
@@ -62,7 +52,6 @@ public class TrackForm {
                 ", artist='" + artist + '\'' +
                 ", length=" + length +
                 ", mediaFileName='" + mediaFileName + '\'' +
-                ", imageFileName='" + imageFileName + '\'' +
                 '}';
     }
 }

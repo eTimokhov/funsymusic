@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.validation;
 
+import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.UserService;
 import org.springframework.stereotype.Component;
@@ -22,22 +23,22 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        User user = (User) o;
+        UserForm userForm = (UserForm) o;
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
-        if (user.getUsername().length() < 3 || user.getUsername().length() > 20) {
+        if (userForm.getUsername().length() < 3 || userForm.getUsername().length() > 20) {
             errors.rejectValue("username", "Size.userForm.username");
         }
-        if (userService.findByUsername(user.getUsername()) != null) {
+        if (userService.findByUsername(userForm.getUsername()) != null) {
             errors.rejectValue("username", "Duplicate.userForm.username");
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
-        if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
+        if (userForm.getPassword().length() < 8 || userForm.getPassword().length() > 32) {
             errors.rejectValue("password", "Size.userForm.password");
         }
 
-        if (!user.getPasswordConfirm().equals(user.getPassword())) {
+        if (!userForm.getPasswordConfirm().equals(userForm.getPassword())) {
             errors.rejectValue("passwordConfirm", "Diff.userForm.passwordConfirm");
         }
     }

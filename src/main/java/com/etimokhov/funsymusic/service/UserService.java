@@ -1,12 +1,13 @@
 package com.etimokhov.funsymusic.service;
 
+import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.model.User;
 
 import java.security.Principal;
 
 public interface UserService {
-    void save(User user);
+    User save(UserForm user);
 
     User findByUsername(String username);
     User getByUsername(String username);

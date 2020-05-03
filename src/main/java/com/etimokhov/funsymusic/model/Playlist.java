@@ -14,7 +14,6 @@ public class Playlist {
     @GeneratedValue
     private Long id;
     private String name;
-    private String imageUrl;
 
     @ManyToOne
     private User owner;
@@ -37,14 +36,6 @@ public class Playlist {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public User getOwner() {

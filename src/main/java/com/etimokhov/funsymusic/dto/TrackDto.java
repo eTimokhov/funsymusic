@@ -12,18 +12,15 @@ public class TrackDto {
 
     private String mediaFileName;
 
-    private String imageFileName;
-
     public TrackDto() {
     }
 
-    public TrackDto(Long id, String name, String artist, Integer length, String mediaFileName, String imageFileName) {
+    public TrackDto(Long id, String name, String artist, Integer length, String mediaFileName) {
         this.id = id;
         this.name = name;
         this.artist = artist;
         this.length = length;
         this.mediaFileName = mediaFileName;
-        this.imageFileName = imageFileName;
     }
 
     public Long getId() {
@@ -58,14 +55,6 @@ public class TrackDto {
         this.mediaFileName = mediaFileName;
     }
 
-    public String getImageFileName() {
-        return imageFileName;
-    }
-
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
-    }
-
     public Integer getLength() {
         return length;
     }
@@ -82,7 +71,6 @@ public class TrackDto {
                 ", artist='" + artist + '\'' +
                 ", length=" + length +
                 ", mediaFileName='" + mediaFileName + '\'' +
-                ", imageFileName='" + imageFileName + '\'' +
                 '}';
     }
 }
