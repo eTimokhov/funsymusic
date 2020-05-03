@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/home")
                     .permitAll()
                 .and()
-                    .csrf().ignoringAntMatchers("/h2-console/**");
+                    .csrf().ignoringAntMatchers("/h2-console/**", "/actuator/**");
 
         http.headers().frameOptions().disable();
     }

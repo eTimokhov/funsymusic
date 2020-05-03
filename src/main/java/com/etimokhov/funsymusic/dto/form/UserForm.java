@@ -6,8 +6,6 @@ public class UserForm {
 
     private String passwordConfirm;
 
-    private String image;
-
     public String getUsername() {
         return username;
     }
@@ -32,11 +30,4 @@ public class UserForm {
         this.passwordConfirm = passwordConfirm;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String imageUrl) {
-        this.image = imageUrl;
-    }
 }

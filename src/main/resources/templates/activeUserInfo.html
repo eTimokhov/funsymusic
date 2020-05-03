@@ -11,6 +11,14 @@
 <div class="container">
     <small>This is your profile</small>
     <h1 th:text="${user.username}"></h1>
+    <img th:src="@{~/images/{img}.jpg(img = ${user.image})}"/>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeImageFormModal">
+        Change profile image
+    </button>
+
+
     <p th:unless="${#lists.isEmpty(uploadedTracks)}">Uploaded tracks:</p>
     <ul>
         <li th:each="track : ${uploadedTracks}"><a th:href="@{~/track/{id}(id = ${track.id})}" th:text="${track.name}"></a></li>
@@ -22,6 +30,33 @@
     </ul>
     <a th:href="@{~/playlist/new}">Create new playlist</a>
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="changeImageFormModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change profile image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" th:action="@{~/user/uploadImage}" enctype="multipart/form-data" id="uploadImageForm">
+                        <div class="form-group">
+                            <label for="imageFile">Choose image</label>
+                            <input type="file" required class="form-control-file" id="imageFile" name="imageFile" accept="image/png, image/jpeg">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button form="uploadImageForm" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 </body>

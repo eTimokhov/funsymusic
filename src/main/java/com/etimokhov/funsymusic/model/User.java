@@ -5,7 +5,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 import java.util.Set;
 
 @Entity
@@ -15,9 +14,6 @@ public class User {
     private long id;
     private String username;
     private String password;
-
-    @Transient
-    private String passwordConfirm;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -48,14 +44,6 @@ public class User {
         this.password = password;
     }
 
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
     public Set<Role> getRoles() {
         return roles;
     }
@@ -68,7 +56,7 @@ public class User {
         return image;
     }
 
-    public void setImage(String imageUrl) {
-        this.image = imageUrl;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

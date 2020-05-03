@@ -1,16 +1,20 @@
 package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.form.UserForm;
+import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.RoleRepository;
 import com.etimokhov.funsymusic.repository.UserRepository;
+import com.etimokhov.funsymusic.util.MediaFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,11 +26,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MediaFileUtil mediaFileUtil;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MediaFileUtil mediaFileUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.mediaFileUtil = mediaFileUtil;
     }
 
     @Override
@@ -35,6 +41,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userForm.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(userForm.getPassword()));
         user.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByName("USER"))));
+        user.setImage("default");
         userRepository.save(user);
         LOG.info("New user #{}, {}:{} saved.", user.getId(), user.getUsername(), user.getPassword());
         return user;
@@ -69,5 +76,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User id:" + id + " not found"));
+    }
+
+    @Override
+    public void uploadImage(User user, MultipartFile imageFile) throws InvalidImageException {
+        String imageName = mediaFileUtil.generateRandomFilenameNoExt();
+        try {
+            mediaFileUtil.saveJpegThumbnails(imageFile.getBytes(), imageName);
+        } catch (IOException e) {
+            throw new InvalidImageException(e);
+        }
+        user.setImage(imageName);
+        userRepository.save(user);
     }
 }

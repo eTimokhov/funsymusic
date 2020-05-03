@@ -1,8 +1,10 @@
 package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.form.UserForm;
+import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 
@@ -17,4 +19,6 @@ public interface UserService {
     User findCurrentUser(Principal principal);
 
     User getById(Long id);
+
+    void uploadImage(User user, MultipartFile imageFile) throws InvalidImageException;
 }

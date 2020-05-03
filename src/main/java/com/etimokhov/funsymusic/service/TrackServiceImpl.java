@@ -110,7 +110,7 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public String getMediaFileFullPath(Long trackId) {
         Track track = getTrack(trackId);
-        return mediaFileUtil.getMediaFileFullPath(track.getMediaFile());
+        return mediaFileUtil.getMp3FileFullPath(track.getMediaFile());
     }
 
     @Override
