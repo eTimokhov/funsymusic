@@ -8,6 +8,7 @@ import com.etimokhov.funsymusic.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Set;
 
 public interface UserService {
     User save(UserForm user);
@@ -24,4 +25,14 @@ public interface UserService {
     User getById(Long id);
 
     void uploadImage(User user, MultipartFile imageFile) throws InvalidImageException;
+
+    void subscribeTo(User currentUser, User subscribeTo);
+    void unsubscribeFrom(User currentUser, User unsubscribeFrom);
+
+    User getByUsernameWithSubscriptions(String username);
+    User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException;
+    Set<User> getSubscribers(User user);
+
+    boolean isSubscribed(User currentUser, User targetUser);
+
 }

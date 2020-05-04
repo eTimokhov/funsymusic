@@ -11,20 +11,23 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String username;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @ManyToMany
+    private Set<User> subscriptions;
+
     private String image;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -58,5 +61,13 @@ public class User {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Set<User> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<User> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }

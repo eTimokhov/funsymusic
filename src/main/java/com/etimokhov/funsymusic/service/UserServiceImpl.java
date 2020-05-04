@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -98,5 +99,43 @@ public class UserServiceImpl implements UserService {
         }
         user.setImage(imageName);
         userRepository.save(user);
+    }
+
+    @Override
+    public void subscribeTo(User currentUserWithSubscriptions, User subscribeTo) {
+        currentUserWithSubscriptions.getSubscriptions().add(subscribeTo);
+        userRepository.save(currentUserWithSubscriptions);
+        LOG.info("User {} subscribed to user {}", currentUserWithSubscriptions.getUsername(), subscribeTo.getUsername());
+    }
+
+    @Override
+    public void unsubscribeFrom(User currentUserWithSubscriptions, User unsubscribeFrom) {
+        currentUserWithSubscriptions.getSubscriptions().removeIf(s -> s.getId().equals(unsubscribeFrom.getId()));
+        userRepository.save(currentUserWithSubscriptions);
+        LOG.info("User {} unsubscribed from user {}", currentUserWithSubscriptions.getUsername(), unsubscribeFrom.getUsername());
+    }
+
+    @Override
+    public User getByUsernameWithSubscriptions(String username) {
+        return userRepository.findWithSubscriptionsByUsername(username).orElseThrow(() -> new NotFoundException("User " + username + " not found"));
+    }
+
+    @Override
+    public User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException {
+        if (principal == null) {
+            throw new NotAuthenticatedException();
+        }
+        return getByUsernameWithSubscriptions(principal.getName());
+    }
+
+    @Override
+    public Set<User> getSubscribers(User user) {
+        return userRepository.findAllBySubscriptionsContaining(user);
+    }
+
+    @Override
+    public boolean isSubscribed(User currentUser, User targetUser) {
+        return currentUser.getSubscriptions().stream().
+                anyMatch(sub -> sub.getId().equals(targetUser.getId()));
     }
 }

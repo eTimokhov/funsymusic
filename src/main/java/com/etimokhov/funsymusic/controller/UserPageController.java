@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.controller;
 
+import com.etimokhov.funsymusic.dto.form.ChangeSubscriptionForm;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
@@ -34,11 +35,45 @@ public class UserPageController {
     @GetMapping("/user/{username}")
     public String getUserInfo(@PathVariable String username, Principal principal, Model model) {
         User requestedUser = userService.getByUsername(username);
+        if (isActiveUser(principal, requestedUser)) {
+            return "redirect:/user/me";
+        }
+        if (principal != null) {
+            User currentUser = userService.getCurrentUserWithSubscriptions(principal);
+            model.addAttribute("isSubscribed", userService.isSubscribed(currentUser, requestedUser));
+        }
+
+
         model.addAttribute("user", requestedUser);
         model.addAttribute("uploadedTracks", trackService.findAllByUploader(requestedUser.getId()));
         model.addAttribute("createdPlaylists", playlistService.findAllByOwner(requestedUser.getId()));
 
-        return isActiveUser(principal, requestedUser) ? "activeUserInfo" : "userInfo";
+        return "userInfo";
+    }
+
+    @GetMapping("/user/me")
+    public String getActiveUserInfo(Principal principal, Model model) {
+        User currentUser = userService.getCurrentUserWithSubscriptions(principal);
+
+        model.addAttribute("user", currentUser);
+        model.addAttribute("uploadedTracks", trackService.findAllByUploader(currentUser.getId()));
+        model.addAttribute("createdPlaylists", playlistService.findAllByOwner(currentUser.getId()));
+
+        return "activeUserInfo";
+    }
+
+    @PostMapping(value = "/user/changeSubscription")
+    public String changeSubscription(@RequestParam String username, @RequestParam ChangeSubscriptionForm.Action action, Principal principal) {
+        User currentUser = userService.getCurrentUserWithSubscriptions(principal);
+        User targetUser = userService.getByUsername(username);
+
+        if (action == ChangeSubscriptionForm.Action.SUBSCRIBE) {
+            userService.subscribeTo(currentUser, targetUser);
+        } else if (action == ChangeSubscriptionForm.Action.UNSUBSCRIBE) {
+            userService.unsubscribeFrom(currentUser, targetUser);
+        }
+
+        return "redirect:/user/" + targetUser.getUsername();
     }
 
     @PostMapping("/user/uploadImage")

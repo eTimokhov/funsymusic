@@ -30,6 +30,14 @@
     </ul>
     <a th:href="@{~/playlist/new}">Create new playlist</a>
 
+    <div>
+        <h4>You subscriptions:</h4>
+        <ul>
+            <li th:each="subsription: ${user.subscriptions}">
+                <a th:href="@{~/user/{username}(username = ${subsription.username})}" th:text="${subsription.username}"></a>
+            </li>
+        </ul>
+    </div>
 
 
     <!-- Modal -->
