@@ -4,6 +4,7 @@ import com.etimokhov.funsymusic.dto.form.ChangeSubscriptionForm;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
+import com.etimokhov.funsymusic.service.UserEventService;
 import com.etimokhov.funsymusic.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +26,13 @@ public class UserPageController {
     private final UserService userService;
     private final TrackService trackService;
     private final PlaylistService playlistService;
+    private final UserEventService userEventService;
 
-    public UserPageController(UserService userService, TrackService trackService, PlaylistService playlistService) {
+    public UserPageController(UserService userService, TrackService trackService, PlaylistService playlistService, UserEventService userEventService) {
         this.userService = userService;
         this.trackService = trackService;
         this.playlistService = playlistService;
+        this.userEventService = userEventService;
     }
 
     @GetMapping("/user/{username}")
@@ -47,6 +50,7 @@ public class UserPageController {
         model.addAttribute("user", requestedUser);
         model.addAttribute("uploadedTracks", trackService.findAllByUploader(requestedUser.getId()));
         model.addAttribute("createdPlaylists", playlistService.findAllByOwner(requestedUser.getId()));
+        model.addAttribute("lastEvents", userEventService.getLastEvents(requestedUser));
 
         return "userInfo";
     }

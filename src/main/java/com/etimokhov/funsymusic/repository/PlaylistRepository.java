@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     List<Playlist> findByOwnerId(Long userId);
 
+    List<Playlist> findTop10ByOwnerIdInOrderByCreateDateDesc(List<Long> userIds);
+
     @EntityGraph(attributePaths = "tracks")
     Optional<Playlist> findOneWithTracksById(Long playlistId);
 }

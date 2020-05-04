@@ -13,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = "subscriptions")
     Optional<User> findWithSubscriptionsByUsername(String username);
 
-    Set<User> findAllBySubscriptionsContaining(User subscription);
+    Set<User> findAllBySubscriptions(User subscription);
 }

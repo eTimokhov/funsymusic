@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TrackRepository extends JpaRepository<Track, Long> {
     List<Track> findByUploaderId(Long userId);
+    List<Track> findTop10ByUploaderIdInOrderByUploadDateDesc(List<Long> userIds);
 }

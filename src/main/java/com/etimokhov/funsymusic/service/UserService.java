@@ -14,6 +14,7 @@ public interface UserService {
     User save(UserForm user);
 
     User findByUsername(String username);
+
     User getByUsername(String username);
 
     User getCurrentUser(Principal principal) throws NotAuthenticatedException;
@@ -27,10 +28,13 @@ public interface UserService {
     void uploadImage(User user, MultipartFile imageFile) throws InvalidImageException;
 
     void subscribeTo(User currentUser, User subscribeTo);
+
     void unsubscribeFrom(User currentUser, User unsubscribeFrom);
 
     User getByUsernameWithSubscriptions(String username);
+
     User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException;
+
     Set<User> getSubscribers(User user);
 
     boolean isSubscribed(User currentUser, User targetUser);

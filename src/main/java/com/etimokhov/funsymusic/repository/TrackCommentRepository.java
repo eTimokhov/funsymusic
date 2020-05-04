@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TrackCommentRepository extends JpaRepository<TrackComment, Long> {
     List<TrackComment> findAllByTrackOrderByCommentDateDesc(Track track);
+
+    List<TrackComment> findTop10ByUserIdInOrderByCommentDateDesc(List<Long> userIds);
 }

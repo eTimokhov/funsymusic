@@ -12,7 +12,6 @@
         Artist: <input type="text" th:field="*{artist}" th:errorclass="invalidInput">
         Length: <span th:text="*{length}">120</span>
         <input type="hidden" th:field="*{mediaFileName}">
-        <input type="hidden" th:field="*{imageFileName}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <input type="submit" th:value="Save">
     </form>

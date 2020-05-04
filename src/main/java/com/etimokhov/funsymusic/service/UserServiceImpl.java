@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<User> getSubscribers(User user) {
-        return userRepository.findAllBySubscriptionsContaining(user);
+        return userRepository.findAllBySubscriptions(user);
     }
 
     @Override
