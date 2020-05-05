@@ -5,10 +5,14 @@ import com.etimokhov.funsymusic.model.Playlist;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.TrackComment;
 import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.model.like.PlaylistLike;
+import com.etimokhov.funsymusic.model.like.TrackLike;
 import com.etimokhov.funsymusic.repository.PlaylistRepository;
 import com.etimokhov.funsymusic.repository.TrackCommentRepository;
 import com.etimokhov.funsymusic.repository.TrackRepository;
 import com.etimokhov.funsymusic.repository.UserRepository;
+import com.etimokhov.funsymusic.repository.like.PlaylistLikeRepository;
+import com.etimokhov.funsymusic.repository.like.TrackLikeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -22,14 +26,18 @@ public class UserEventServiceImpl implements UserEventService {
     private final TrackCommentRepository trackCommentRepository;
     private final TrackRepository trackRepository;
     private final PlaylistRepository playlistRepository;
+    private final TrackLikeRepository trackLikeRepository;
+    private final PlaylistLikeRepository playlistLikeRepository;
     private final UserRepository userRepository;
     private final UserService userService;
 
 
-    public UserEventServiceImpl(TrackCommentRepository trackCommentRepository, TrackRepository trackRepository, PlaylistRepository playlistRepository, UserRepository userRepository, UserService userService) {
+    public UserEventServiceImpl(TrackCommentRepository trackCommentRepository, TrackRepository trackRepository, PlaylistRepository playlistRepository, TrackLikeRepository trackLikeRepository, PlaylistLikeRepository playlistLikeRepository, UserRepository userRepository, UserService userService) {
         this.trackCommentRepository = trackCommentRepository;
         this.trackRepository = trackRepository;
         this.playlistRepository = playlistRepository;
+        this.trackLikeRepository = trackLikeRepository;
+        this.playlistLikeRepository = playlistLikeRepository;
         this.userRepository = userRepository;
         this.userService = userService;
     }
@@ -39,11 +47,15 @@ public class UserEventServiceImpl implements UserEventService {
         List<TrackComment> trackComments = trackCommentRepository.findTop10ByUserIdInOrderByCommentDateDesc(userIds);
         List<Track> tracks = trackRepository.findTop10ByUploaderIdInOrderByUploadDateDesc(userIds);
         List<Playlist> playlists = playlistRepository.findTop10ByOwnerIdInOrderByCreateDateDesc(userIds);
+        List<TrackLike> trackLikes = trackLikeRepository.findTop10ByUserIdInOrderByLikeDateDesc(userIds);
+        List<PlaylistLike> playlistLikes = playlistLikeRepository.findTop10ByUserIdInOrderByLikeDateDesc(userIds);
 
         return Stream.of(
                 trackComments.stream().map(this::mapTrackCommentToEventDto),
                 tracks.stream().map(this::mapTrackToEventDto),
-                playlists.stream().map(this::mapPlaylistToEventDto)
+                playlists.stream().map(this::mapPlaylistToEventDto),
+                trackLikes.stream().map(this::mapTrackLikeToEventDto),
+                playlistLikes.stream().map(this::mapPlaylistLikeToEventDto)
         )
                 .flatMap(Function.identity())
                 .sorted(Comparator.comparing(UserEventDto::getEventDate, Comparator.reverseOrder()))
@@ -92,6 +104,26 @@ public class UserEventServiceImpl implements UserEventService {
         userEventDto.setTargetName(playlist.getName());
         userEventDto.setEventDate(playlist.getCreateDate());
         userEventDto.setUser(userService.mapToDto(playlist.getOwner()));
+        return userEventDto;
+    }
+
+    private UserEventDto mapTrackLikeToEventDto(TrackLike trackLike) {
+        UserEventDto userEventDto = new UserEventDto();
+        userEventDto.setAction(UserEventDto.Action.TRACK_LIKE);
+        userEventDto.setTargetId(String.valueOf(trackLike.getTrack().getId()));
+        userEventDto.setTargetName(trackLike.getTrack().getName());
+        userEventDto.setEventDate(trackLike.getLikeDate());
+        userEventDto.setUser(userService.mapToDto(trackLike.getUser()));
+        return userEventDto;
+    }
+
+    private UserEventDto mapPlaylistLikeToEventDto(PlaylistLike playlistLike) {
+        UserEventDto userEventDto = new UserEventDto();
+        userEventDto.setAction(UserEventDto.Action.PLAYLIST_LIKE);
+        userEventDto.setTargetId(String.valueOf(playlistLike.getPlaylist().getId()));
+        userEventDto.setTargetName(playlistLike.getPlaylist().getName());
+        userEventDto.setEventDate(playlistLike.getLikeDate());
+        userEventDto.setUser(userService.mapToDto(playlistLike.getUser()));
         return userEventDto;
     }
 }

@@ -5,11 +5,14 @@
     <title th:text="${track.name}">Track</title>
     <meta id="data" th:attr="
         data-trackId=${track.id},
+        data-itemId=${track.id},
         data-getPlaylistsUrl=@{~/playlist/trackInPlaylists},
         data-addTrackUrl=@{~/playlist/addTrack},
         data-removeTrackUrl=@{~/playlist/removeTrack},
         data-getCommentsUrl=@{~/track/comments},
-        data-addCommentUrl=@{~/track/addComment}
+        data-addCommentUrl=@{~/track/addComment},
+        data-getLikeStatusUrl=@{~/like/track},
+        data-performLikeUrl=@{~/like/track/perform}
     "/>
     <!--    <script th:src="@{~/js/addTrackInPlaylist.js}"></script>-->
 </head>
@@ -36,7 +39,9 @@
             </audio>
         </dl>
     </div>
-
+    <div class="row">
+        <button id="like" class="btn btn-primary"></button>
+    </div>
 
     <div class="row" th:unless="${currentUser == null}">
         <button id="playlistsWithTrackToggle" type="button" class="btn btn-outline-info">Add to playlists</button>
@@ -63,5 +68,6 @@
 </div>
 <script th:src="@{~/js/addTrackInPlaylist.js}"></script>
 <script th:src="@{~/js/comments.js}"></script>
+<script th:src="@{~/js/like.js}"></script>
 </body>
 </html>

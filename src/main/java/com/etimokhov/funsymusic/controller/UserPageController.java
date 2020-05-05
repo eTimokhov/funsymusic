@@ -2,6 +2,7 @@ package com.etimokhov.funsymusic.controller;
 
 import com.etimokhov.funsymusic.dto.form.ChangeSubscriptionForm;
 import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.service.LikeService;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
 import com.etimokhov.funsymusic.service.UserEventService;
@@ -27,12 +28,14 @@ public class UserPageController {
     private final TrackService trackService;
     private final PlaylistService playlistService;
     private final UserEventService userEventService;
+    private final LikeService likeService;
 
-    public UserPageController(UserService userService, TrackService trackService, PlaylistService playlistService, UserEventService userEventService) {
+    public UserPageController(UserService userService, TrackService trackService, PlaylistService playlistService, UserEventService userEventService, LikeService likeService) {
         this.userService = userService;
         this.trackService = trackService;
         this.playlistService = playlistService;
         this.userEventService = userEventService;
+        this.likeService = likeService;
     }
 
     @GetMapping("/user/{username}")
@@ -62,6 +65,8 @@ public class UserPageController {
         model.addAttribute("user", currentUser);
         model.addAttribute("uploadedTracks", trackService.findAllByUploader(currentUser.getId()));
         model.addAttribute("createdPlaylists", playlistService.findAllByOwner(currentUser.getId()));
+        model.addAttribute("likedTracks", likeService.getLikedTracks(currentUser));
+        model.addAttribute("likedPlaylists", likeService.getLikedPlaylists(currentUser));
 
         return "activeUserInfo";
     }

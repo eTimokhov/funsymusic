@@ -5,9 +5,12 @@
     <title th:text="${playlist.name}">Playlist</title>
     <meta id="data" th:attr="
         data-playlistId=${playlist.id},
+        data-itemId=${playlist.id},
         data-savePlaylistUrl=@{~/playlist/savePlaylist},
         data-getTracksUrl=@{~/playlist/getTracks},
-        data-trackUrl=@{~/track/}
+        data-trackUrl=@{~/track/},
+        data-getLikeStatusUrl=@{~/like/playlist},
+        data-performLikeUrl=@{~/like/playlist/perform}
     "/>
 </head>
 <body>
@@ -24,8 +27,11 @@
         <button id="cancelEditingBtn" class="btn btn-secondary">Cancel</button>
         <button id="savePlaylistBtn" class="btn btn-success">Save</button>
     </div>
-
+    <div class="row">
+        <button id="like" class="btn btn-primary"></button>
+    </div>
 </div>
 <script th:src="@{~/js/playlist.js}"></script>
+<script th:src="@{~/js/like.js}"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ public class UserEventDto {
 
 
     public enum Action {
-        TRACK_COMMENT, NEW_TRACK, NEW_PLAYLIST;
+        TRACK_COMMENT, NEW_TRACK, NEW_PLAYLIST, TRACK_LIKE, PLAYLIST_LIKE;
     }
     private UserDto user;
 
