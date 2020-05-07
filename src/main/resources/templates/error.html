@@ -1,0 +1,15 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments/general.html :: head"/>
+    <title>Error</title>
+</head>
+<body>
+<div class="container">
+    <h3>Error</h3>
+    <p th:text="${errorMessage}"></p>
+
+
+</div>
+</body>
+</html>
