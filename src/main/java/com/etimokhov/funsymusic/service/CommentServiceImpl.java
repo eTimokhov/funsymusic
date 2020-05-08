@@ -51,4 +51,9 @@ public class CommentServiceImpl implements CommentService {
         return trackCommentDto;
     }
 
+    @Override
+    public List<TrackComment> findLastTrackComments(User user) {
+        return trackCommentRepository.findTop10ByUserIdInOrderByCommentDateDesc(List.of(user.getId()));
+    }
+
 }

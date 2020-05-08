@@ -14,4 +14,6 @@ public interface CommentService {
     List<TrackComment> findTrackComments(Track track);
 
     TrackCommentDto mapToDto(TrackComment trackComment);
+
+    List<TrackComment> findLastTrackComments(User user);
 }

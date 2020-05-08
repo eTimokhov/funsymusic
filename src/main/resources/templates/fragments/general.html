@@ -50,18 +50,6 @@
                         </th:block>
 
                         <th:block th:unless="${currentUser == null}">
-                            <li class="nav-item" th:classappend="${page == 'uploadTrack' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/uploadTrack}">Upload</a>
-                            </li>
-                            <li class="nav-item" th:classappend="${page == 'myTracks' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">My tracks</a>
-                            </li>
-                            <li class="nav-item" th:classappend="${page == 'myPlaylists' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">My playlists</a>
-                            </li>
-                            <li class="nav-item" th:classappend="${page == 'myLikes' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">My likes</a>
-                            </li>
                             <li class="nav-item" th:classappend="${page == 'myProfile' ? 'active' : ''}">
                                 <a class="nav-link font-weight-bold" th:href="@{~/user/me}" th:text="${currentUser.username}"></a>
                             </li>

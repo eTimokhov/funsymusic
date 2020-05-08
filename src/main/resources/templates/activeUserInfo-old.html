@@ -1,0 +1,55 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments/general.html :: head"/>
+    <title>Your account</title>
+</head>
+<body>
+<!--TODO: change image-->
+<!--TODO: manage playlists-->
+
+<div class="container">
+    <small>This is your profile</small>
+    <h1 th:text="${user.username}"></h1>
+    <img th:src="@{~/images/{img}.jpg(img = ${user.image})}"/>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeImageFormModal">
+        Change profile image
+    </button>
+
+    <p th:unless="${#lists.isEmpty(uploadedTracks)}">Uploaded tracks:</p>
+    <ul>
+        <li th:each="track : ${uploadedTracks}"><a th:href="@{~/track/{id}(id = ${track.id})}" th:text="${track.name}"></a></li>
+    </ul>
+    <p>Your playlists:</p>
+    <p th:if="${#lists.isEmpty(createdPlaylists)}">You don't have playlists</p>
+    <ul>
+        <li th:each="playlist : ${createdPlaylists}"><a th:href="@{~/playlist/{id} (id = ${playlist.id})}" th:text="${playlist.name}"></a></li>
+    </ul>
+    <a th:href="@{~/playlist/new}">Create new playlist</a>
+
+    <p th:unless="${#lists.isEmpty(likedTracks)}">Liked tracks:</p>
+    <ul>
+        <li th:each="track : ${likedTracks}"><a th:href="@{~/track/{id}(id = ${track.id})}" th:text="${track.name}"></a></li>
+    </ul>
+    <p th:unless="${#lists.isEmpty(likedPlaylists)}">Liked playlists:</p>
+    <ul>
+        <li th:each="playlist : ${likedPlaylists}"><a th:href="@{~/playlist/{id} (id = ${playlist.id})}" th:text="${playlist.name}"></a></li>
+    </ul>
+
+    <div>
+        <h4>You subscriptions:</h4>
+        <ul>
+            <li th:each="subsription: ${user.subscriptions}">
+                <a th:href="@{~/user/{username}(username = ${subsription.username})}" th:text="${subsription.username}"></a>
+            </li>
+        </ul>
+    </div>
+
+
+
+
+</div>
+</body>
+</html>

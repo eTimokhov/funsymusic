@@ -2,6 +2,7 @@ package com.etimokhov.funsymusic.controller;
 
 import com.etimokhov.funsymusic.dto.form.ChangeSubscriptionForm;
 import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.service.CommentService;
 import com.etimokhov.funsymusic.service.LikeService;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
@@ -29,13 +30,15 @@ public class UserPageController {
     private final PlaylistService playlistService;
     private final UserEventService userEventService;
     private final LikeService likeService;
+    private final CommentService commentService;
 
-    public UserPageController(UserService userService, TrackService trackService, PlaylistService playlistService, UserEventService userEventService, LikeService likeService) {
+    public UserPageController(UserService userService, TrackService trackService, PlaylistService playlistService, UserEventService userEventService, LikeService likeService, CommentService commentService) {
         this.userService = userService;
         this.trackService = trackService;
         this.playlistService = playlistService;
         this.userEventService = userEventService;
         this.likeService = likeService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/user/{username}")
@@ -53,6 +56,9 @@ public class UserPageController {
         model.addAttribute("user", requestedUser);
         model.addAttribute("uploadedTracks", trackService.findAllByUploader(requestedUser.getId()));
         model.addAttribute("createdPlaylists", playlistService.findAllByOwner(requestedUser.getId()));
+        model.addAttribute("likedTracks", likeService.getLikedTracks(requestedUser));
+        model.addAttribute("likedPlaylists", likeService.getLikedPlaylists(requestedUser));
+        model.addAttribute("lastComments", commentService.findLastTrackComments(requestedUser));
         model.addAttribute("lastEvents", userEventService.getLastEvents(requestedUser));
 
         return "userInfo";
@@ -67,6 +73,7 @@ public class UserPageController {
         model.addAttribute("createdPlaylists", playlistService.findAllByOwner(currentUser.getId()));
         model.addAttribute("likedTracks", likeService.getLikedTracks(currentUser));
         model.addAttribute("likedPlaylists", likeService.getLikedPlaylists(currentUser));
+        model.addAttribute("lastComments", commentService.findLastTrackComments(currentUser));
 
         return "activeUserInfo";
     }
