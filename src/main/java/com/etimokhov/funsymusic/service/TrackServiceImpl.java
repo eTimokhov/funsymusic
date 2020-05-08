@@ -18,6 +18,8 @@ import org.apache.tika.parser.Parser;
 import org.apache.tika.parser.mp3.Mp3Parser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.ContentHandler;
@@ -129,6 +131,11 @@ public class TrackServiceImpl implements TrackService {
                 track.getLength(),
                 track.getMediaFile()
         );
+    }
+
+    @Override
+    public Page<Track> findLastUploaded(Integer page, Integer count) {
+        return trackRepository.findAllByOrderByUploadDateDesc(PageRequest.of(page, count));
     }
 
     private Track mapTrackDtoToTrack(TrackForm trackForm) {

@@ -14,5 +14,66 @@
     <script th:src="@{~/js/includeCsrfAjax.js}"></script>
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav th:fragment="header" class="navbar navbar-expand-lg navbar-light bg-light">
+
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="#">Funsymusic</a>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="navbar-nav">
+                        <li class="nav-item" th:classappend="${page == 'home' ? 'active' : ''}">
+                            <a class="nav-link" th:href="@{~/home}">Home</a>
+                        </li>
+                        <li class="nav-item" th:classappend="${page == 'tracks' ? 'active' : ''}">
+                            <a class="nav-link" th:href="@{~/browse/tracks}">Tracks</a>
+                        </li>
+                        <li class="nav-item" th:classappend="${page == 'playlists' ? 'active' : ''}">
+                            <a class="nav-link" th:href="@{~/browse/playlists}">Playlists</a>
+                        </li>
+                        <li class="nav-item" th:classappend="${page == 'users' ? 'active' : ''}">
+                            <a class="nav-link" th:href="@{~/browse/users}">Users</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ml-md-auto">
+                        <th:block th:if="${currentUser == null}">
+                            <li class="nav-item" th:classappend="${page == 'login' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">Sing up</a>
+                            </li>
+                            <li class="nav-item" th:classappend="${page == 'registration' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">Sign in</a>
+                            </li>
+                        </th:block>
+
+                        <th:block th:unless="${currentUser == null}">
+                            <li class="nav-item" th:classappend="${page == 'uploadTrack' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">Upload</a>
+                            </li>
+                            <li class="nav-item" th:classappend="${page == 'myTracks' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">My tracks</a>
+                            </li>
+                            <li class="nav-item" th:classappend="${page == 'myPlaylists' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">My playlists</a>
+                            </li>
+                            <li class="nav-item" th:classappend="${page == 'myLikes' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">My likes</a>
+                            </li>
+                            <li class="nav-item" th:classappend="${page == 'myProfile' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">My profile</a>
+                            </li>
+                            <li class="nav-item" th:classappend="${page == 'logout' ? 'active' : ''}">
+                                <a class="nav-link" th:href="@{~/home}">Log out</a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
 </body>
 </html>

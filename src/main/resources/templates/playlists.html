@@ -1,0 +1,33 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments/general.html :: head"/>
+    <title>Test page</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav th:replace="fragments/general.html :: header(page = 'playlists')"></nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                Browse new playlists
+            </h3>
+            <p>
+                Check out new playlists that our users created
+            </p>
+            <a th:if="${hasPreviousPage}" th:href="@{~/browse/playlists(page = ${currentPage - 1})}" class="btn btn-outline-secondary">Prev</a>
+            <a th:if="${hasNextPage}" th:href="@{~/browse/playlists(page = ${currentPage + 1})}"  class="btn btn-outline-secondary">Next</a>
+            <ul class="list-unstyled">
+                <li th:each="playlist: ${playlists}">
+                    <a th:href="@{~/playlist/{id}(id = ${playlist.id})}" th:text="${playlist.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

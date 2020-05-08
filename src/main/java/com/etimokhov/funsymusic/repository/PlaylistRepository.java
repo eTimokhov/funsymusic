@@ -1,6 +1,8 @@
 package com.etimokhov.funsymusic.repository;
 
 import com.etimokhov.funsymusic.model.Playlist;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,8 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     List<Playlist> findByOwnerId(Long userId);
 
     List<Playlist> findTop10ByOwnerIdInOrderByCreateDateDesc(List<Long> userIds);
+
+    Page<Playlist> findAllByOrderByCreateDateDesc(Pageable pageable);
 
     @EntityGraph(attributePaths = "tracks")
     Optional<Playlist> findOneWithTracksById(Long playlistId);

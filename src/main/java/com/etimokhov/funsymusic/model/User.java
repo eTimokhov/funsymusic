@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -14,6 +15,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private Date registrationDate;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
@@ -53,6 +55,14 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public String getImage() {

@@ -5,6 +5,7 @@ import com.etimokhov.funsymusic.dto.form.PlaylistForm;
 import com.etimokhov.funsymusic.model.Playlist;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -28,4 +29,6 @@ public interface PlaylistService {
     List<Track> getTracks(Long playlistId);
 
     void updatePlaylist(Playlist playlist, List<Long> trackIds);
+
+    Page<Playlist> findLastUploaded(Integer page, Integer count);
 }

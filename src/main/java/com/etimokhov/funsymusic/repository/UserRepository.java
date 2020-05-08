@@ -1,6 +1,8 @@
 package com.etimokhov.funsymusic.repository;
 
 import com.etimokhov.funsymusic.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +16,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findWithSubscriptionsByUsername(String username);
 
     Set<User> findAllBySubscriptions(User subscription);
+
+    Page<User> findAllByOrderByRegistrationDateDesc(Pageable pageable);
 }

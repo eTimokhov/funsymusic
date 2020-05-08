@@ -9,6 +9,8 @@ import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.PlaylistRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -103,6 +105,11 @@ public class PlaylistServiceImpl implements PlaylistService {
                 .collect(Collectors.toList());
         playlist.setTracks(tracks);
         playlistRepository.save(playlist);
+    }
+
+    @Override
+    public Page<Playlist> findLastUploaded(Integer page, Integer count) {
+        return playlistRepository.findAllByOrderByCreateDateDesc(PageRequest.of(page, count));
     }
 
     private boolean playlistContainsTrack(Playlist playlist, Track track) {

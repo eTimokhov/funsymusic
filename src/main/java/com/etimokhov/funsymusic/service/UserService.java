@@ -5,6 +5,7 @@ import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
@@ -38,5 +39,7 @@ public interface UserService {
     Set<User> getSubscribers(User user);
 
     boolean isSubscribed(User currentUser, User targetUser);
+
+    Page<User> findLastRegistered(Integer page, Integer count);
 
 }

@@ -11,6 +11,8 @@ import com.etimokhov.funsymusic.repository.UserRepository;
 import com.etimokhov.funsymusic.util.MediaFileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,6 +46,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userForm.getUsername());
         user.setPassword(bCryptPasswordEncoder.encode(userForm.getPassword()));
         user.setRoles(new HashSet<>(Arrays.asList(roleRepository.findByName("USER"))));
+        user.setRegistrationDate(new Date());
         user.setImage("default");
         userRepository.save(user);
         LOG.info("New user #{}, {}:{} saved.", user.getId(), user.getUsername(), user.getPassword());
@@ -137,5 +141,10 @@ public class UserServiceImpl implements UserService {
     public boolean isSubscribed(User currentUser, User targetUser) {
         return currentUser.getSubscriptions().stream().
                 anyMatch(sub -> sub.getId().equals(targetUser.getId()));
+    }
+
+    @Override
+    public Page<User> findLastRegistered(Integer page, Integer count) {
+        return userRepository.findAllByOrderByRegistrationDateDesc(PageRequest.of(page, count));
     }
 }
