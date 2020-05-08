@@ -42,16 +42,16 @@
                     <ul class="navbar-nav ml-md-auto">
                         <th:block th:if="${currentUser == null}">
                             <li class="nav-item" th:classappend="${page == 'login' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">Sing up</a>
+                                <a class="nav-link" th:href="@{~/login}">Sing in</a>
                             </li>
                             <li class="nav-item" th:classappend="${page == 'registration' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">Sign in</a>
+                                <a class="nav-link" th:href="@{~/registration}">Sign up</a>
                             </li>
                         </th:block>
 
                         <th:block th:unless="${currentUser == null}">
                             <li class="nav-item" th:classappend="${page == 'uploadTrack' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">Upload</a>
+                                <a class="nav-link" th:href="@{~/uploadTrack}">Upload</a>
                             </li>
                             <li class="nav-item" th:classappend="${page == 'myTracks' ? 'active' : ''}">
                                 <a class="nav-link" th:href="@{~/home}">My tracks</a>
@@ -63,10 +63,14 @@
                                 <a class="nav-link" th:href="@{~/home}">My likes</a>
                             </li>
                             <li class="nav-item" th:classappend="${page == 'myProfile' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">My profile</a>
+                                <a class="nav-link font-weight-bold" th:href="@{~/user/me}" th:text="${currentUser.username}"></a>
                             </li>
-                            <li class="nav-item" th:classappend="${page == 'logout' ? 'active' : ''}">
-                                <a class="nav-link" th:href="@{~/home}">Log out</a>
+                            <li class="nav-item">
+                                <form method="POST" th:action="@{~/logout}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <button class="nav-link btn btn-outline-secondary">Log out</button>
+                                </form>
                             </li>
                         </th:block>
                     </ul>

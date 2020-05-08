@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = NotAuthenticatedException.class)
     public String forbiddenErrorHandler(HttpServletRequest req, Exception e, Model model) {
-        model.addAttribute("errorMessage", "Something is wrong with file that you uploaded.");
+        model.addAttribute("errorMessage", "You don't have permission to see this page.");
         return "error";
     }
 }
