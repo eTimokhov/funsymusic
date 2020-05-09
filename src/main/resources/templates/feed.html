@@ -2,25 +2,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:include="fragments/general.html :: head"/>
-    <title>Your feed</title>
+    <title>Feed</title>
 </head>
 <body>
 <div class="container">
-    <h6>Feed</h6>
-    <ul>
-        <li th:each="event : ${lastEvents}">
-            <img th:src="@{~/images/{img}_small.jpg(img = ${event.user.image})}"/>
-            <a th:href="@{~/user/{username}(username = ${event.user.username})}" th:text="${event.user.username}"></a>
-            <th:block th:switch="${event.action.name()}">
-                <span th:case="'TRACK_COMMENT'"> added comment to <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
-                <span th:case="'NEW_TRACK'"> uploaded new track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
-                <span th:case="'NEW_PLAYLIST'"> created new playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
-                <span th:case="'TRACK_LIKE'"> liked track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
-                <span th:case="'PLAYLIST_LIKE'"> liked playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
-            </th:block>
-            <span th:text="' at ' + ${event.eventDate}"></span>
-        </li>
-    </ul>
+    <div class="row">
+        <div class="col-md-12">
+            <nav th:replace="fragments/general.html :: header(page = 'feed')"></nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <h4>Check your subscriptions last news</h4>
+            <p th:if="${#lists.isEmpty(lastEvents)}">Nothing is here...</p>
+            <div th:each="event : ${lastEvents}" class="media">
+                <img class="mr-3" th:src="@{~/images/{img}_small.jpg(img = ${event.user.image})}"/>
+                <div class="media-body">
+                    <a th:href="@{~/user/{username}(username = ${event.user.username})}" th:text="${event.user.username}"></a>
+                    <th:block th:switch="${event.action.name()}">
+                        <span th:case="'TRACK_COMMENT'"> added comment to <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'NEW_TRACK'"> uploaded new track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'NEW_PLAYLIST'"> created new playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'TRACK_LIKE'"> liked track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'PLAYLIST_LIKE'"> liked playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                    </th:block>
+                    <small th:text="' at ' + ${event.eventDate}"></small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+
+

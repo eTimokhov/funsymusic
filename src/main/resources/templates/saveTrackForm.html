@@ -2,21 +2,36 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:include="fragments/general.html :: head"/>
-    <title>Save uploaded track</title>
+    <title>Feed</title>
 </head>
 <body>
 <div class="container">
-    <h1>Edit track information</h1>
-    <form th:action="@{/uploadTrack/save}" th:object="${track}" method="POST">
-        Name: <input type="text" th:field="*{name}" th:errorclass="invalidInput">
-        Artist: <input type="text" th:field="*{artist}" th:errorclass="invalidInput">
-        Length: <span th:text="*{length}">120</span>
-        <input type="hidden" th:field="*{mediaFileName}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        <input type="submit" th:value="Save">
-    </form>
-
-
+    <div class="row">
+        <div class="col-md-12">
+            <nav th:replace="fragments/general.html :: header"></nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Edit track information</h3>
+            <form th:action="@{/uploadTrack/save}" th:object="${track}" method="POST">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" th:errorclass="is-invalid" autofocus required>
+                </div>
+                <div class="form-group">
+                    <label for="name">Artist</label>
+                    <input type="text" class="form-control" id="artist" th:field="*{artist}" th:errorclass="is-invalid" required>
+                </div>
+                <input type="hidden" th:field="*{mediaFileName}">
+                <input type="hidden" th:field="*{length}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+
+

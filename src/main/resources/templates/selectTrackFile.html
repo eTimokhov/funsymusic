@@ -2,17 +2,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:include="fragments/general.html :: head"/>
-    <title>Choose track file to upload</title>
+    <title>Feed</title>
 </head>
 <body>
 <div class="container">
-    <h1>Upload new track</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input name="file" type="file" onchange="this.form.submit();">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    </form>
-
-
+    <div class="row">
+        <div class="col-md-12">
+            <nav th:replace="fragments/general.html :: header"></nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Upload new track</h3>
+            <form method="POST" enctype="multipart/form-data">
+                <input name="file" type="file" onchange="this.form.submit();">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>
+
+

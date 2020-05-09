@@ -6,6 +6,7 @@ public class TrackForm {
     @NotBlank
     private String name;
 
+    @NotBlank
     private String artist;
 
     private Integer length;
