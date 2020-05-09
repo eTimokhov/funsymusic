@@ -15,8 +15,6 @@
         <form class="col-md-4" method="post" th:object="${userForm}">
             <img class="mx-auto d-block" th:src="@{~/images/funsymusic.png}" width="72" height="72">
             <h2 class="text-center">Create account</h2>
-<!--            <span th:if="${loginError}" class="text-danger">Wrong username or password</span>-->
-<!--            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Incorrect username</p>-->
             <ul th:if="${#fields.hasErrors('*')}" class="list-unstyled">
                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}" class="text-danger">Input is incorrect</li>
             </ul>

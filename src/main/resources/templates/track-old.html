@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <th:block th:include="fragments/general.html :: head"/>
-    <title th:text="${track.name}"></title>
+    <title th:text="${track.name}">Track</title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/amplitudejs@v5.0.3/dist/amplitude.js"></script>
     <link rel="stylesheet" th:href="@{~/css/trackPlayer.css}">
     <meta id="data" th:attr="
@@ -22,19 +22,60 @@
 </head>
 <body>
 <div class="container">
+
+
+    <div class="row"><h1>Track</h1></div>
     <div class="row">
-        <div class="col-md-12">
-            <nav th:replace="fragments/general.html :: header"></nav>
-        </div>
+        <dl>
+            <dt>Name:</dt>
+            <dd th:text="${track.name}">Never Gonna Give You Up</dd>
+            <dt>Artist:</dt>
+
+            <dd th:text="${track.artist}">Rick Astley</dd>
+            <dt>Length:</dt>
+            <dd th:text="${track.length}">3:22</dd>
+            <dt>Uploaded by:</dt>
+            <dd><a th:text="${track.uploader?.username ?: 'Deleted user'}"
+                   th:href="@{~/user/{id}(id = ${track.uploader?.username})}">John Doe</a></dd>
+            <audio controls>
+                <source th:src="@{~/media/audio/{id}(id = ${track.id})}" type="audio/ogg">
+                Your browser does not support the audio element.
+            </audio>
+        </dl>
     </div>
     <div class="row">
-        <div class="col-md-4">
-            <!--    PLAYER START-->
+        <button id="like" class="btn btn-primary"></button>
+    </div>
+
+    <div class="row" th:unless="${currentUser == null}">
+        <button id="playlistsWithTrackToggle" type="button" class="btn btn-outline-info">Add to playlists</button>
+        <ul id="playlistsWithTrack"></ul>
+    </div>
+
+    <div class="row">
+        <div th:unless="${currentUser == null}">
+            <p>Leave comment.</p>
+            <form id="addCommentForm">
+                <div class="form-group">
+                    <label for="commentTextarea">Leave your comment</label>
+                    <textarea class="form-control" id="commentTextarea" rows="3" name="text"></textarea>
+                    <input type="hidden" name="trackId" th:value="${track.id}"/>
+                </div>
+            </form>
+            <button id="addCommentBtn" class="btn btn-primary">Save</button>
+        </div>
+        <p>Comments</p>
+        <ul id="commentSection"></ul>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+<!--    PLAYER START-->
             <!-- Amplitude Player -->
             <div id="amplitude-player">
 
                 <!-- Left Side Player -->
-                <div id="amplitude-left" class="width100">
+                <div id="amplitude-left">
                     <img data-amplitude-song-info="cover_art_url" class="album-art"/>
                     <div class="amplitude-visualization" id="large-visualization">
 
@@ -94,43 +135,11 @@
                 <!-- End Left Side Player -->
             </div>
             <!-- End Amplitdue Player -->
-            <!--    PLAYER END-->
-        </div>
-        <div class="col-md-8">
-            <h1 class="display-4" th:text="${track.name}"></h1>
-            <p th:text="'by ' + ${track.artist}"></p>
-            <p><small>Uploaded by <a th:text="${track.uploader?.username ?: 'Deleted user'}"
-                                     th:href="@{~/user/{id}(id = ${track.uploader?.username})}"/><span th:text="${' ' + @timeUtil.convertToPrettyTime(track.uploadDate)}"></span></small></p>
-            <button id="like" class="btn btn-primary"></button>
-            <div class="row" th:unless="${currentUser == null}">
-                <div class="col">
-                    <button id="playlistsWithTrackToggle" type="button" class="btn btn-outline-info">Add to playlists
-                    </button>
-                    <ul id="playlistsWithTrack"></ul>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div th:unless="${currentUser == null}">
-                        <form id="addCommentForm">
-                            <div class="form-group">
-                                <label for="commentTextarea">Leave your comment</label>
-                                <textarea class="form-control" id="commentTextarea" rows="3" name="text"></textarea>
-                                <input type="hidden" name="trackId" th:value="${track.id}"/>
-                            </div>
-                        </form>
-                        <button id="addCommentBtn" class="btn btn-primary">Save</button>
-                    </div>
-                    <h6>Comments</h6>
-                    <ul id="commentSection" class="list-unstyled"></ul>
-                </div>
-            </div>
-
+<!--    PLAYER END-->
         </div>
     </div>
 
 </div>
-
 <script th:src="@{~/js/addTrackInPlaylist.js}"></script>
 <script th:src="@{~/js/comments.js}"></script>
 <script th:src="@{~/js/like.js}"></script>

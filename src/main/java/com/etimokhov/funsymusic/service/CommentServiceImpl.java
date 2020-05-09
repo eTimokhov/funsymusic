@@ -6,6 +6,7 @@ import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.TrackComment;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.TrackCommentRepository;
+import com.etimokhov.funsymusic.util.TimeUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,11 +18,13 @@ public class CommentServiceImpl implements CommentService {
     private final TrackCommentRepository trackCommentRepository;
     private final TrackService trackService;
     private final UserService userService;
+    private final TimeUtil timeUtil;
 
-    public CommentServiceImpl(TrackCommentRepository trackCommentRepository, TrackService trackService, UserService userService) {
+    public CommentServiceImpl(TrackCommentRepository trackCommentRepository, TrackService trackService, UserService userService, TimeUtil timeUtil) {
         this.trackCommentRepository = trackCommentRepository;
         this.trackService = trackService;
         this.userService = userService;
+        this.timeUtil = timeUtil;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
         trackCommentDto.setText(trackComment.getText());
         trackCommentDto.setTrackId(trackComment.getTrack().getId());
         trackCommentDto.setTrackTimestamp(trackComment.getTrackTimestamp());
-        trackCommentDto.setCommentDate(trackComment.getCommentDate());
+        trackCommentDto.setCommentDateRel(timeUtil.convertToPrettyTime(trackComment.getCommentDate()));
         trackCommentDto.setUser(userService.mapToDto(trackComment.getUser()));
         return trackCommentDto;
     }

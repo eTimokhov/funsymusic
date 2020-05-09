@@ -22,7 +22,7 @@
                         John Doe
                     </h3>
                     <p>
-                        Signed up <span th:text="${user.registrationDate}"></span>
+                        Signed up <span th:text="${@timeUtil.convertToPrettyTime(user.registrationDate)}"></span>
                     </p>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changeImageFormModal">
                         Change profile image

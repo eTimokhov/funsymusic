@@ -22,6 +22,7 @@ function renderLike(likeStatus) {
     let performLikeUrl = data.attr('data-performLikeUrl');
     let text = `${likeStatus.liked ? "Unlike" : "Like"} (${likeStatus.totalCount})`;
     let likeBtn = $('#like');
+    likeBtn.prop('disabled', !likeStatus.auth);
     likeBtn.text(text);
     if (likeStatus.auth) {
         likeBtn.one('click', (function () {

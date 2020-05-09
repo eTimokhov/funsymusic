@@ -1,7 +1,5 @@
 package com.etimokhov.funsymusic.dto;
 
-import java.util.Date;
-
 public class TrackCommentDto {
     private Long trackId;
 
@@ -11,7 +9,7 @@ public class TrackCommentDto {
 
     private UserDto user;
 
-    private Date commentDate;
+    private String commentDateRel;
 
     public Long getTrackId() {
         return trackId;
@@ -45,11 +43,11 @@ public class TrackCommentDto {
         this.user = user;
     }
 
-    public Date getCommentDate() {
-        return commentDate;
+    public String getCommentDateRel() {
+        return commentDateRel;
     }
 
-    public void setCommentDate(Date commentDate) {
-        this.commentDate = commentDate;
+    public void setCommentDateRel(String commentDateRel) {
+        this.commentDateRel = commentDateRel;
     }
 }

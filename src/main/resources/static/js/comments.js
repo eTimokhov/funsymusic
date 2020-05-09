@@ -23,6 +23,8 @@ function addComment() {
         // data: JSON.stringify("{trackId: 4, muDog: 'lllala'}"),
         success: function () {
             loadComments();
+            $('#addCommentForm textarea').val('');
+            $('#addCommentBtn').attr('disabled', true);
         }
     });
 }
@@ -45,27 +47,41 @@ function updateComments(comments) {
     let pageData = $('#data');
     let commentsSection = $("#commentSection");
     commentsSection.empty();
+    if (!comments.length) {
+        commentsSection.append(
+            $('<li/>', {text: 'Nothing is here'})
+        )
+    }
     for (const comment of comments) {
         commentsSection.append(
             $('<li/>', {})
                 .append(
-                    $('<img/>', {src: `/images/${comment.user.image}_small.jpg`})
+                    $('<div/>', {'class': 'media'})
+                        .append(
+                            $('<img/>', {'class': 'mr-3', src: `/images/${comment.user.image}_small.jpg`})
+                        )
+                        .append(
+                            $('<div/>', {'class': 'media-body'})
+                                .append(
+                                    $('<small/>', {'class': 'd-block'})
+                                        .append($('<span/>', {text: ' by '}))
+                                        .append($('<a/>', {href: `/user/${comment.user.username}`, text: comment.user.username}))
+                                        .append(' ')
+                                        .append($('<span/>', {text: comment.commentDateRel})
+                                        )
+                                )
+                                .append($('<span/>', {text: comment.text, 'class': 'font-italic'}))
+                        )
                 )
-                .append('by ')
-                .append(
-                    $('<a/>', {href: `/user/${comment.user.username}`, text: comment.user.username})
-                )
-                .append(` at ${comment.commentDate}: `)
-                .append(comment.text)
         )
     }
 }
 
-function getFormData($form){
+function getFormData($form) {
     var unindexed_array = $form.serializeArray();
     var indexed_array = {};
 
-    $.map(unindexed_array, function(n, i){
+    $.map(unindexed_array, function (n, i) {
         indexed_array[n['name']] = n['value'];
     });
 
