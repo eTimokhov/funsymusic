@@ -5,6 +5,7 @@ $(function() {
 
     savePlaylistBtn.hide();
     cancelEditingBtn.hide();
+    trackList.hide();
     loadTracks();
 
     trackList.sortable();
@@ -26,27 +27,31 @@ function loadTracks() {
         type: 'get',
         data: {"playlistId": playlistId},
         success: function (tracks) {
+            if (tracks.length == 0) {
+                $('#editPlaylistBtn').hide();
+            }
             renderTracks(tracks)
+            initPlayer(tracks)
         }
     });
 }
 
 function renderTracks(tracks) {
     let trackList = $('#trackList');
-    let trackUrl = $('#data').attr('data-trackUrl');
     for (const track of tracks) {
         trackList.append(
             $('<li/>', {
                 'data-trackId': track.id,
                 'class': 'list-group-item d-flex justify-content-between align-items-center'
             }).append(
-                $('<a/>', {href: 'trackUrlPlaceholder', text: track.name})
+                $('<a/>', {href: `/track/${track.id}`, text: track.name})
             )
         )
     }
 }
 
 function activateEdit() {
+    $('#trackList').show();
     $('#trackList').sortable("enable");
     let listItems = $('#trackList li');
     listItems.addClass('list-group-item-info');
@@ -54,7 +59,7 @@ function activateEdit() {
     listItems.each(function () {
         let li = $(this);
         $('<span/>', {
-            'class': 'badge badge-danger badge-pill',
+            'class': 'badge badge-danger badge-pill cursor-pointer',
             text: 'x',
             click: function() {
                 if (li.attr('data-deleted') === 'true') {
@@ -74,6 +79,7 @@ function activateEdit() {
 }
 
 function cancelEditing() {
+    $('#trackList').hide();
     $('#trackList').sortable("disable");
     $('#cancelEditingBtn').hide();
     $('#savePlaylistBtn').hide();
@@ -102,6 +108,81 @@ function sendPlaylist() {
         data: JSON.stringify(updatePlaylistDto),
         success: () => {
             cancelEditing();
+            $('#trackList').hide();
         }
     });
+}
+
+function mapTrackToAmplSong(track) {
+    return {
+        name: track.name,
+        artist: track.artist,
+        url: `/media/audio/${track.id}`,
+        cover_art_url: '/images/funsymusic.png'
+    }
+}
+
+function initPlayer(tracks) {
+    let songs = [];
+    for (const track of tracks) {
+        songs.push(mapTrackToAmplSong(track));
+    }
+    let amplitudePlaylist = $('#amplitude-right');
+    amplitudePlaylist.empty();
+    Amplitude.pause();
+    for (const [i, track] of tracks.entries()) {
+        amplitudePlaylist.append(
+            $('<div/>', {'class': 'song amplitude-song-container amplitude-play-pause', 'data-amplitude-song-index': i}).append(
+                $('<div/>', {'class': 'song-now-playing-icon-container'}).append(
+                    $('<div/>', {'class': 'play-button-container'})
+                ).append(
+                    $('<img/>', {'class': 'now-playing', src: 'https://521dimensions.com/img/open-source/amplitudejs/blue-player/now-playing.svg'})
+                )
+            ).append(
+                $('<div/>', {'class': 'song-meta-data'}).append(
+                    $('<span/>', {'class': 'song-title', text: track.name})
+                ).append(
+                    $('<span/>', {'class': 'song-artist', text: track.artist})
+                )
+            ).append(
+                $('<a/>', {href: `/track/${track.id}`, 'class': 'bandcamp-link', target: '_blank'}).append(
+                    $('<img/>', {'class': 'bandcamp-grey', src: '/images/more.svg', width: '24px'})
+                )
+            ).append(
+                $('<span/>', {'class': 'song-duration', text: convertSecondsToTimeFormat(track.length)})
+            )
+        )
+    }
+    /*
+        Initializes AmplitudeJS
+    */
+    Amplitude.init({
+        songs: songs,
+        "callbacks": {
+            'play': function () {
+                document.getElementById('album-art').style.visibility = 'hidden';
+                document.getElementById('large-visualization').style.visibility = 'visible';
+            },
+
+            'pause': function () {
+                document.getElementById('album-art').style.visibility = 'visible';
+                document.getElementById('large-visualization').style.visibility = 'hidden';
+            }
+        },
+        waveforms: {
+            sample_rate: 50
+        }
+    });
+
+
+    //document.getElementById('large-visualization').style.height = document.getElementById('album-art').offsetWidth + 'px';
+}
+function str_pad_left(string,pad,length) {
+    return (new Array(length+1).join(pad)+string).slice(-length);
+}
+
+function convertSecondsToTimeFormat(time) {
+    let minutes = Math.floor(time / 60);
+    let seconds = time - minutes * 60;
+    return str_pad_left(minutes,'0',2)+':'+str_pad_left(seconds,'0',2);
 }

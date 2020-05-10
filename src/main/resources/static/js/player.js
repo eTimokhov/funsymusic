@@ -27,9 +27,6 @@ $(function () {
             if (!this.classList.contains('amplitude-active-song-container')) {
                 this.querySelectorAll('.play-button-container')[0].style.display = 'block';
             }
-
-            this.querySelectorAll('img.bandcamp-grey')[0].style.display = 'none';
-            this.querySelectorAll('img.bandcamp-white')[0].style.display = 'block';
             this.querySelectorAll('.song-duration')[0].style.color = '#FFFFFF';
         });
 
@@ -41,8 +38,6 @@ $(function () {
             this.querySelectorAll('.song-meta-data .song-title')[0].style.color = '#272726';
             this.querySelectorAll('.song-meta-data .song-artist')[0].style.color = '#607D8B';
             this.querySelectorAll('.play-button-container')[0].style.display = 'none';
-            this.querySelectorAll('img.bandcamp-grey')[0].style.display = 'block';
-            this.querySelectorAll('img.bandcamp-white')[0].style.display = 'none';
             this.querySelectorAll('.song-duration')[0].style.color = '#607D8B';
         });
 
@@ -53,36 +48,4 @@ $(function () {
             this.querySelectorAll('.play-button-container')[0].style.display = 'none';
         });
     }
-
-
-    let data = $('#data');
-
-    /*
-        Initializes AmplitudeJS
-    */
-    Amplitude.init({
-        "songs": [
-            {
-                "name": data.attr('data-trackName'),
-                "artist": data.attr('data-trackArtist'),
-                "url": data.attr('data-trackUrl'),
-                "cover_art_url": "/images/funsymusic.png"
-            }
-        ],
-        "callbacks": {
-            'play': function () {
-                document.getElementById('album-art').style.visibility = 'hidden';
-                document.getElementById('large-visualization').style.visibility = 'visible';
-            },
-
-            'pause': function () {
-                document.getElementById('album-art').style.visibility = 'visible';
-                document.getElementById('large-visualization').style.visibility = 'hidden';
-            }
-        },
-        waveforms: {
-            sample_rate: 50
-        }
-    });
-    document.getElementById('large-visualization').style.height = document.getElementById('album-art').offsetWidth + 'px';
 });

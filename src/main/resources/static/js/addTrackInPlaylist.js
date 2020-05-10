@@ -57,7 +57,7 @@ function updatePlaylists(playlists) {
         let action = playlist.trackInPlaylist ? removeTrackUrl : addTrackUrl;
         let text = `${playlist.playlistName} ${playlist.trackInPlaylist ? 'X' : '+'}`;
         let badgeText = playlist.trackInPlaylist ? 'Delete': 'Add';
-        let badgeClass = playlist.trackInPlaylist ? 'badge badge-secondary' : 'badge badge-primary';
+        let badgeClass = playlist.trackInPlaylist ? 'cursor-pointer badge badge-secondary' : 'cursor-pointer badge badge-primary';
         playlistsWithTracks.append(
             $("<li/>", {})
                 .append(
@@ -72,16 +72,3 @@ function updatePlaylists(playlists) {
         );
     }
 }
-
-commentsSection.append(
-    $('<li/>', {})
-        .append(
-            $('<img/>', {src: `/images/${comment.user.image}_small.jpg`})
-        )
-        .append('by ')
-        .append(
-            $('<a/>', {href: `/user/${comment.user.username}`, text: comment.user.username})
-        )
-        .append(` at ${comment.commentDate}: `)
-        .append(comment.text)
-)

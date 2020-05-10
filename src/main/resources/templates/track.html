@@ -4,7 +4,7 @@
     <th:block th:include="fragments/general.html :: head"/>
     <title th:text="${track.name}"></title>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/amplitudejs@v5.0.3/dist/amplitude.js"></script>
-    <link rel="stylesheet" th:href="@{~/css/trackPlayer.css}">
+    <link rel="stylesheet" th:href="@{~/css/player.css}">
     <meta id="data" th:attr="
         data-trackId=${track.id},
         data-itemId=${track.id},
@@ -134,6 +134,7 @@
 <script th:src="@{~/js/addTrackInPlaylist.js}"></script>
 <script th:src="@{~/js/comments.js}"></script>
 <script th:src="@{~/js/like.js}"></script>
-<script th:src="@{~/js/trackPlayer.js}"></script>
+<script th:src="@{~/js/player.js}"></script>
+<script th:src="@{~/js/initTrackPlayer.js}"></script>
 </body>
 </html>
