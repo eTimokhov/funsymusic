@@ -65,8 +65,8 @@
             <ul class="list-unstyled">
                 <li th:each="comment: ${lastComments}">
                     <small>
-                        To <a th:href="@{~/track/{id}(id = ${comment.track.id})}" th:text="${comment.track.artist} + ' – ' + ${comment.track.name}"></a> at
-                        <span th:text="${comment.commentDate}"></span>
+                        To <a th:href="@{~/track/{id}(id = ${comment.track.id})}" th:text="${comment.track.artist} + ' – ' + ${comment.track.name}"></a>
+                        <span th:text="' ' + ${@timeUtil.convertToPrettyTime(comment.commentDate)}"></span>
                     </small>
                     <p th:text="${comment.text}"></p>
                 </li>

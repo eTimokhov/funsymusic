@@ -50,7 +50,7 @@
                         <span th:case="'TRACK_LIKE'"> liked track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
                         <span th:case="'PLAYLIST_LIKE'"> liked playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
                     </th:block>
-                    <small th:text="' at ' + ${event.eventDate}"></small>
+                    <small th:text="' ' + ${@timeUtil.convertToPrettyTime(event.eventDate)}"></small>
                 </div>
             </div>
         </div>
@@ -87,8 +87,8 @@
             <ul class="list-unstyled">
                 <li th:each="comment: ${lastComments}">
                     <small>
-                        To <a th:href="@{~/track/{id}(id = ${comment.track.id})}" th:text="${comment.track.artist} + ' – ' + ${comment.track.name}"></a> at
-                        <span th:text="${comment.commentDate}"></span>
+                        To <a th:href="@{~/track/{id}(id = ${comment.track.id})}" th:text="${comment.track.artist} + ' – ' + ${comment.track.name}"></a>
+                        <span th:text="' ' + ${@timeUtil.convertToPrettyTime(comment.commentDate)}"></span>
                     </small>
                     <p th:text="${comment.text}"></p>
                 </li>
