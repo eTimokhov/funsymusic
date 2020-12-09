@@ -1,0 +1,153 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <th:block th:include="fragments/general.html :: head"/>
+    <title th:text="${user.username}">User's page</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <nav th:replace="fragments/general.html :: header"></nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-3">
+                    <img class="img-fluid rounded" th:src="@{~/images/{img}.jpg(img = ${user.image})}" />
+                </div>
+                <div class="col-md-9">
+                    <h3 th:text="${user.username}">
+                        John Doe
+                    </h3>
+                    <p>
+                        Signed up <span th:text="${@timeUtil.convertToPrettyTime(user.registrationDate)}"></span>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-3 border border-dark rounded p-3">
+                            <div th:unless="${isBlocked}"><h5>Block User</h5>
+                                <form method="post" th:object="${blockUserForm}" th:action="@{~/admin/blockUser}">
+                                    <div class="form-group">
+                                        <label for="blockUntil">Block until</label>
+                                        <input type="date" class="form-control" id="blockUntil" th:field="*{blockUntil}"
+                                               autofocus required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="reason">Reason</label>
+                                        <input type="text" class="form-control" id="reason" th:field="*{reason}">
+                                    </div>
+                                    <input type="hidden" name="username" th:value="${user.username}">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <button class="btn btn-secondary">Confirm</button>
+                                </form>
+                            </div>
+                            <div th:if="${isBlocked}"><h5>User is blocked</h5>
+                                <p>Reason: <span th:text="${blockingRecord.reason}">is not specified</span></p>
+                                <p>Blocked: <span th:text="${@timeUtil.convertToPrettyTime(blockingRecord.blockedDate)}">-</span></p>
+                                <p>Blocked until: <span th:text="${blockingRecord.blockedUntil}">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:unless="${#lists.isEmpty(lastEvents)}" class="row mt-3">
+        <div class="col-md-9">
+            <h4>Last events</h4>
+            <p th:if="${#lists.isEmpty(lastEvents)}">This user hasn't done anything lately</p>
+            <div th:each="event : ${lastEvents}" class="media">
+                <div class="mr-3">
+                    <img class="img-fluid" th:src="@{~/images/{img}_small.jpg(img = ${event.user.image})}"/>
+                </div>
+                <div class="media-body">
+                    <a th:href="@{~/user/{username}(username = ${event.user.username})}" th:text="${event.user.username}"></a>
+                    <th:block th:switch="${event.action.name()}">
+                        <span th:case="'TRACK_COMMENT'"> added comment to <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'NEW_TRACK'"> uploaded new track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'NEW_PLAYLIST'"> created new playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'TRACK_LIKE'"> liked track: <a th:href="@{~/track/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                        <span th:case="'PLAYLIST_LIKE'"> liked playlist: <a th:href="@{~/playlist/{id}(id = ${event.targetId})}" th:text="${event.targetName}"></a></span>
+                    </th:block>
+                    <small th:text="' ' + ${@timeUtil.convertToPrettyTime(event.eventDate)}"></small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <h2>
+                Tracks
+            </h2>
+            <p th:if="${#lists.isEmpty(uploadedTracks)}">This user hasn't uploaded any tracks</p>
+            <ul class="list-unstyled">
+                <li th:each="track: ${uploadedTracks}">
+                    <a th:href="@{~/track/{id}(id = ${track.id})}"
+                       th:text="${track.artist} + ' – ' + ${track.name}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h2>
+                Playlists
+            </h2>
+            <p th:if="${#lists.isEmpty(createdPlaylists)}">This user doesn't have any playlists</p>
+            <ul class="list-unstyled">
+                <li th:each="playlist: ${createdPlaylists}">
+                    <a th:href="@{~/playlist/{id}(id = ${playlist.id})}" th:text="${playlist.name}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h2>
+                Comments
+            </h2>
+            <p th:if="${#lists.isEmpty(lastComments)}">This user hasn't left any comments</p>
+            <ul class="list-unstyled">
+                <li th:each="comment: ${lastComments}">
+                    <small>
+                        To <a th:href="@{~/track/{id}(id = ${comment.track.id})}" th:text="${comment.track.artist} + ' – ' + ${comment.track.name}"></a>
+                        <span th:text="' ' + ${@timeUtil.convertToPrettyTime(comment.commentDate)}"></span>
+                    </small>
+                    <p th:text="${comment.text}"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2>
+                        Liked tracks
+                    </h2>
+                    <p th:if="${#lists.isEmpty(likedTracks)}">This user hasn't like any tracks</p>
+                    <ul class="list-unstyled">
+                        <li th:each="track: ${likedTracks}">
+                            <a th:href="@{~/track/{id}(id = ${track.id})}"
+                               th:text="${track.artist} + ' – ' + ${track.name}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h2>
+                        Liked playlists
+                    </h2>
+                    <p th:if="${#lists.isEmpty(likedPlaylists)}">This user hasn't like any playlists</p>
+                    <ul class="list-unstyled">
+                        <li th:each="playlist: ${likedPlaylists}">
+                            <a th:href="@{~/playlist/{id}(id = ${playlist.id})}" th:text="${playlist.name}"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+

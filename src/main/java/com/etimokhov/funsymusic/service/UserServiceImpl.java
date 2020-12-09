@@ -5,7 +5,9 @@ import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.exception.NotFoundException;
+import com.etimokhov.funsymusic.model.BlockingRecord;
 import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.repository.BlockingRecordRepository;
 import com.etimokhov.funsymusic.repository.RoleRepository;
 import com.etimokhov.funsymusic.repository.UserRepository;
 import com.etimokhov.funsymusic.util.MediaFileUtil;
@@ -30,12 +32,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BlockingRecordRepository blockingRecordRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final MediaFileUtil mediaFileUtil;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MediaFileUtil mediaFileUtil) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BlockingRecordRepository blockingRecordRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MediaFileUtil mediaFileUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.blockingRecordRepository = blockingRecordRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.mediaFileUtil = mediaFileUtil;
     }
@@ -147,4 +151,40 @@ public class UserServiceImpl implements UserService {
     public Page<User> findLastRegistered(Integer page, Integer count) {
         return userRepository.findAllByOrderByRegistrationDateDesc(PageRequest.of(page, count));
     }
+
+    @Override
+    public void blockUser(String username, Date blockUntil, String reason) {
+        User user = findByUsername(username);
+        if (user == null) {
+            LOG.error("Trying to block unknown user {}", username);
+            return;
+        }
+        BlockingRecord blockingRecord = new BlockingRecord();
+        blockingRecord.setUser(user);
+        blockingRecord.setReason(reason);
+        blockingRecord.setBlockedDate(new Date());
+        blockingRecord.setBlockedUntil(blockUntil);
+        blockingRecord = blockingRecordRepository.save(blockingRecord);
+        LOG.info("Added new blocking record, username: {}, blocked until: {}", blockingRecord.getUser().getUsername(), blockingRecord.getBlockedUntil());
+    }
+
+    @Override
+    public BlockingRecord findRelevantBlockingRecord(String username) {
+        User user = findByUsername(username);
+        if (user == null) {
+            LOG.error("Trying to find blocking record for unknown user {}", username);
+            return null;
+        }
+        return blockingRecordRepository.findByUserOrderByBlockedUntilDesc(user).orElse(null);
+    }
+
+    @Override
+    public boolean isBlockingRecordRelevant(BlockingRecord blockingRecord) {
+        if (blockingRecord == null) {
+            return false;
+        }
+        return blockingRecord.getBlockedUntil().before(new Date());
+    }
+
+
 }

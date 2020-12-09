@@ -4,11 +4,13 @@ import com.etimokhov.funsymusic.dto.UserDto;
 import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
+import com.etimokhov.funsymusic.model.BlockingRecord;
 import com.etimokhov.funsymusic.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.Set;
 
 public interface UserService {
@@ -42,4 +44,9 @@ public interface UserService {
 
     Page<User> findLastRegistered(Integer page, Integer count);
 
+    void blockUser(String username, Date blockUntil, String reason);
+
+    BlockingRecord findRelevantBlockingRecord(String username);
+
+    boolean isBlockingRecordRelevant(BlockingRecord blockingRecord);
 }
