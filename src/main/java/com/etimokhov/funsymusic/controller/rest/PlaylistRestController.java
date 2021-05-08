@@ -10,8 +10,10 @@ import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
 import com.etimokhov.funsymusic.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PlaylistRestController {
 
     private final PlaylistService playlistService;
@@ -33,6 +38,22 @@ public class PlaylistRestController {
         this.playlistService = playlistService;
         this.trackService = trackService;
         this.userService = userService;
+    }
+
+    @GetMapping("/api/playlists")
+    public ResponseEntity<Map<String, Object>> getTracks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<Playlist> pagePlaylists = playlistService.findLastUploaded(page, size);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("playlists", pagePlaylists.getContent());
+        response.put("currentPage", pagePlaylists.getNumber());
+        response.put("totalItems", pagePlaylists.getTotalElements());
+        response.put("totalPages", pagePlaylists.getTotalPages());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/playlist/addTrack")
