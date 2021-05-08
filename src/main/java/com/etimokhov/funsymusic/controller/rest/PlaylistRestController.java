@@ -41,7 +41,7 @@ public class PlaylistRestController {
     }
 
     @GetMapping("/api/playlists")
-    public ResponseEntity<Map<String, Object>> getTracks(
+    public ResponseEntity<Map<String, Object>> getPlaylists(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
