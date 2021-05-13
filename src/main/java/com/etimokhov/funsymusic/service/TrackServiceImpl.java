@@ -129,13 +129,19 @@ public class TrackServiceImpl implements TrackService {
                 track.getName(),
                 track.getArtist(),
                 track.getLength(),
-                track.getMediaFile()
+                track.getMediaFile(),
+                track.getUploader().getId()
         );
     }
 
     @Override
     public Page<Track> findLastUploaded(Integer page, Integer count) {
         return trackRepository.findAllByOrderByUploadDateDesc(PageRequest.of(page, count));
+    }
+
+    @Override
+    public Page<Track> findLastUploadedByUploader(Long userId, int page, int count) {
+        return trackRepository.findAllByUploaderIdOrderByUploadDateDesc(userId, PageRequest.of(page, count));
     }
 
     private Track mapTrackDtoToTrack(TrackForm trackForm) {

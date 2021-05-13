@@ -1,6 +1,7 @@
 package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.IsTrackInPlaylistDto;
+import com.etimokhov.funsymusic.dto.PlaylistDto;
 import com.etimokhov.funsymusic.dto.form.PlaylistForm;
 import com.etimokhov.funsymusic.model.Playlist;
 import com.etimokhov.funsymusic.model.Track;
@@ -31,4 +32,8 @@ public interface PlaylistService {
     void updatePlaylist(Playlist playlist, List<Long> trackIds);
 
     Page<Playlist> findLastUploaded(Integer page, Integer count);
+
+    Page<Playlist> findLastUploadedByOwner(Long userId, Integer page, Integer count);
+
+    PlaylistDto mapToDto(Playlist playlist);
 }

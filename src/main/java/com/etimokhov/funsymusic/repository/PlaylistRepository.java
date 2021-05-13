@@ -17,6 +17,8 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
     Page<Playlist> findAllByOrderByCreateDateDesc(Pageable pageable);
 
+    Page<Playlist> findAllByOwnerIdOrderByCreateDateDesc(Long userId, Pageable pageable);
+
     @EntityGraph(attributePaths = "tracks")
     Optional<Playlist> findOneWithTracksById(Long playlistId);
 

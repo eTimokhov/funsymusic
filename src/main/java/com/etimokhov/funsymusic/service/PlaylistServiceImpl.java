@@ -1,6 +1,8 @@
 package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.IsTrackInPlaylistDto;
+import com.etimokhov.funsymusic.dto.PlaylistDto;
+import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.form.PlaylistForm;
 import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.Playlist;
@@ -110,6 +112,21 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public Page<Playlist> findLastUploaded(Integer page, Integer count) {
         return playlistRepository.findAllByOrderByCreateDateDesc(PageRequest.of(page, count));
+    }
+
+    @Override
+    public Page<Playlist> findLastUploadedByOwner(Long userId, Integer page, Integer count) {
+        return playlistRepository.findAllByOwnerIdOrderByCreateDateDesc(userId, PageRequest.of(page, count));
+    }
+
+    @Override
+    public PlaylistDto mapToDto(Playlist playlist) {
+        return new PlaylistDto(
+                playlist.getId(),
+                playlist.getName(),
+                playlist.getOwner().getId(),
+                playlist.getCreateDate()
+        );
     }
 
     private boolean playlistContainsTrack(Playlist playlist, Track track) {

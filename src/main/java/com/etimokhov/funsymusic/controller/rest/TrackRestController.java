@@ -27,9 +27,16 @@ public class TrackRestController {
     @GetMapping("/api/tracks")
     public ResponseEntity<Map<String, Object>> getTracks(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long userId) {
 
-        Page<Track> pageTracks = trackService.findLastUploaded(page, size);
+        Page<Track> pageTracks;
+
+        if (userId != null) {
+            pageTracks = trackService.findLastUploadedByUploader(userId, page, size);
+        } else {
+            pageTracks = trackService.findLastUploaded(page, size);
+        }
 
         Map<String, Object> response = new HashMap<>();
         response.put("tracks", pageTracks.getContent().stream().map(trackService::mapToDto).collect(Collectors.toList()));

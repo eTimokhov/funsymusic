@@ -24,4 +24,6 @@ public interface TrackService {
     TrackDto mapToDto(Track track);
 
     Page<Track> findLastUploaded(Integer page, Integer count);
+
+    Page<Track> findLastUploadedByUploader(Long userId, int page, int size);
 }

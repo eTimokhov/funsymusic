@@ -40,15 +40,22 @@ public class PlaylistRestController {
         this.userService = userService;
     }
 
+    //TODO: map to dto
     @GetMapping("/api/playlists")
     public ResponseEntity<Map<String, Object>> getPlaylists(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long userId) {
 
-        Page<Playlist> pagePlaylists = playlistService.findLastUploaded(page, size);
+        Page<Playlist> pagePlaylists;
+        if (userId != null) {
+            pagePlaylists = playlistService.findLastUploadedByOwner(userId, page, size);
+        } else {
+            pagePlaylists = playlistService.findLastUploaded(page, size);
+        }
 
         Map<String, Object> response = new HashMap<>();
-        response.put("playlists", pagePlaylists.getContent());
+        response.put("playlists", pagePlaylists.getContent().stream().map(playlistService::mapToDto).collect(Collectors.toList()));
         response.put("currentPage", pagePlaylists.getNumber());
         response.put("totalItems", pagePlaylists.getTotalElements());
         response.put("totalPages", pagePlaylists.getTotalPages());

@@ -13,6 +13,7 @@ public interface TrackRepository extends JpaRepository<Track, Long> {
     List<Track> findTop10ByUploaderIdInOrderByUploadDateDesc(List<Long> userIds);
 
     Page<Track> findAllByOrderByUploadDateDesc(Pageable pageable);
+    Page<Track> findAllByUploaderIdOrderByUploadDateDesc(Long uploaderId, Pageable pageable);
 
     @Query("select t from TrackLike tl join tl.track t join tl.user u where u.id = :userId")
     List<Track> findByUserLikes(Long userId);

@@ -1,38 +1,38 @@
 package com.etimokhov.funsymusic.controller.advice;
 
-import com.etimokhov.funsymusic.exception.CannotSaveFileException;
-import com.etimokhov.funsymusic.exception.InvalidImageException;
-import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
-import com.etimokhov.funsymusic.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
-//@ControllerAdvice
+@ControllerAdvice
+@RestController
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = NotFoundException.class)
-    public String notFoundErrorHandler(HttpServletRequest req, Exception e, Model model) {
-        model.addAttribute("errorMessage", "The page you are looking doesn't exist.");
-        return "error";
+    private class JsonResponse {
+        String message;
+
+        public JsonResponse() {
+        }
+
+        public JsonResponse(String message) {
+            super();
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = {CannotSaveFileException.class, InvalidImageException.class})
-    public String invalidFileErrorHandler(HttpServletRequest req, Exception e, Model model) {
-        model.addAttribute("errorMessage", "Something is wrong with file that you uploaded.");
-        return "error";
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<JsonResponse> handleException(Exception e) {
+        return new ResponseEntity<>(new JsonResponse(e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler(value = NotAuthenticatedException.class)
-    public String forbiddenErrorHandler(HttpServletRequest req, Exception e, Model model) {
-        model.addAttribute("errorMessage", "You don't have permission to see this page.");
-        return "error";
-    }
 }
