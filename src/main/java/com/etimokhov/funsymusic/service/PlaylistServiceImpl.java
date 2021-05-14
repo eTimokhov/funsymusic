@@ -2,7 +2,6 @@ package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.IsTrackInPlaylistDto;
 import com.etimokhov.funsymusic.dto.PlaylistDto;
-import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.form.PlaylistForm;
 import com.etimokhov.funsymusic.exception.NotFoundException;
 import com.etimokhov.funsymusic.model.Playlist;
@@ -29,10 +28,13 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     private final TrackService trackService;
 
+    private final UserService userService;
 
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackService trackService) {
+
+    public PlaylistServiceImpl(PlaylistRepository playlistRepository, TrackService trackService, UserService userService) {
         this.playlistRepository = playlistRepository;
         this.trackService = trackService;
+        this.userService = userService;
     }
 
     @Override
@@ -46,10 +48,22 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
+    //TODO: outdated
     public Playlist createPlaylist(PlaylistForm playlistForm, User owner) {
         Playlist playlist = new Playlist();
         playlist.setName(playlistForm.getName());
         playlist.setOwner(owner);
+        playlist.setCreateDate(new Date());
+        playlist = playlistRepository.save(playlist);
+        LOG.info("Playlist #{}: {} was successfully created", playlist.getId(), playlist.getName());
+        return playlistRepository.save(playlist);
+    }
+
+    @Override
+    public Playlist createPlaylist(PlaylistForm playlistForm, String ownerUsername) {
+        Playlist playlist = new Playlist();
+        playlist.setName(playlistForm.getName());
+        playlist.setOwner(userService.getByUsername(ownerUsername));
         playlist.setCreateDate(new Date());
         playlist = playlistRepository.save(playlist);
         LOG.info("Playlist #{}: {} was successfully created", playlist.getId(), playlist.getName());

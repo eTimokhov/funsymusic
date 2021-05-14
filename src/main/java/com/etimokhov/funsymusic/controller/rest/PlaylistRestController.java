@@ -4,22 +4,31 @@ import com.etimokhov.funsymusic.dto.IsTrackInPlaylistDto;
 import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.TrackInPlaylistDto;
 import com.etimokhov.funsymusic.dto.UpdatePlaylistDto;
+import com.etimokhov.funsymusic.dto.form.PlaylistForm;
 import com.etimokhov.funsymusic.model.Playlist;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.payload.response.MessageResponse;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
 import com.etimokhov.funsymusic.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +69,19 @@ public class PlaylistRestController {
         response.put("totalItems", pagePlaylists.getTotalElements());
         response.put("totalPages", pagePlaylists.getTotalPages());
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/playlists")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Map<String, Object>> newPlaylist(@Valid @RequestBody PlaylistForm playlistForm) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
+
+        Playlist playlist = playlistService.createPlaylist(playlistForm, username);
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("playlist", playlistService.mapToDto(playlist));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

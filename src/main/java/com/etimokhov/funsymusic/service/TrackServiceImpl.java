@@ -40,9 +40,12 @@ public class TrackServiceImpl implements TrackService {
 
     private final TrackRepository trackRepository;
 
-    public TrackServiceImpl(MediaFileUtil mediaFileUtil, TrackRepository trackRepository) {
+    private final UserService userService;
+
+    public TrackServiceImpl(MediaFileUtil mediaFileUtil, TrackRepository trackRepository, UserService userService) {
         this.mediaFileUtil = mediaFileUtil;
         this.trackRepository = trackRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -101,10 +104,21 @@ public class TrackServiceImpl implements TrackService {
         trackForm.setLength(durationSeconds);
     }
 
+    //outdated
     @Override
     public Track saveTrack(TrackForm trackForm, User uploadedBy) {
         Track track = mapTrackDtoToTrack(trackForm);
         track.setUploader(uploadedBy);
+        track.setUploadDate(new Date());
+        track = trackRepository.save(track);
+        LOG.info("Track {} was successfully saved", track.getId());
+        return track;
+    }
+
+    @Override
+    public Track saveTrack(TrackForm trackForm, String uploadedByUsername) {
+        Track track = mapTrackDtoToTrack(trackForm);
+        track.setUploader(userService.getByUsername(uploadedByUsername));
         track.setUploadDate(new Date());
         track = trackRepository.save(track);
         LOG.info("Track {} was successfully saved", track.getId());

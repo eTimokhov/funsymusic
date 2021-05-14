@@ -16,6 +16,7 @@ public interface PlaylistService {
     Playlist getPlaylistWithTracks(Long id);
 
     Playlist createPlaylist(PlaylistForm playlistForm, User owner);
+    Playlist createPlaylist(PlaylistForm playlistForm, String ownerUsername);
 
     List<Playlist> findAllByOwner(Long userId);
 

@@ -17,6 +17,8 @@ public interface TrackService {
 
     Track saveTrack(TrackForm trackForm, User uploadedBy);
 
+    Track saveTrack(TrackForm trackForm, String uploadedByUsername);
+
     String getMediaFileFullPath(Long trackId);
 
     List<Track> findAllByUploader(Long userId);

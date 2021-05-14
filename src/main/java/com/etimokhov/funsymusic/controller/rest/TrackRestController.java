@@ -1,15 +1,28 @@
 package com.etimokhov.funsymusic.controller.rest;
 
+import com.etimokhov.funsymusic.dto.form.TrackForm;
 import com.etimokhov.funsymusic.model.Track;
+import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.TrackService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -43,6 +56,29 @@ public class TrackRestController {
         response.put("currentPage", pageTracks.getNumber());
         response.put("totalItems", pageTracks.getTotalElements());
         response.put("totalPages", pageTracks.getTotalPages());
+        //response.put("userRequested", SecurityContextHolder.getContext().getAuthentication().toString());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/tracks/uploadFile")
+    public ResponseEntity<Map<String, Object>> uploadTrack(@RequestParam MultipartFile file) {
+        TrackForm trackForm = trackService.processTrackFileUploading(file);
+        Map<String, Object> response = new HashMap<>();
+        response.put("trackInfo", trackForm);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/api/tracks")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Map<String, Object>> saveTrack(@Valid @RequestBody TrackForm trackForm) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
+
+        Track track = trackService.saveTrack(trackForm, username);
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("track", trackService.mapToDto(track));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
