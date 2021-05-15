@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.controller.rest;
 
+import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.form.TrackForm;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,7 +63,15 @@ public class TrackRestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/api/tracks/{id}")
+    public ResponseEntity<Map<String, Object>> getTrack(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("track", trackService.mapToDto(trackService.getTrack(id)));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/api/tracks/uploadFile")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Object>> uploadTrack(@RequestParam MultipartFile file) {
         TrackForm trackForm = trackService.processTrackFileUploading(file);
         Map<String, Object> response = new HashMap<>();

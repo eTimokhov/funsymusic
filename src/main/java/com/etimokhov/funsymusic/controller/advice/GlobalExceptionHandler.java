@@ -1,5 +1,6 @@
 package com.etimokhov.funsymusic.controller.advice;
 
+import com.etimokhov.funsymusic.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -42,8 +43,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
-    public ResponseEntity<JsonErrorResponse> handleAuthException(Exception e) {
+    public ResponseEntity<JsonErrorResponse> handleAuthException(AccessDeniedException e) {
         return new ResponseEntity<>(new JsonErrorResponse("You are not authorized for this!"), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = NotFoundException.class)
+    public ResponseEntity<JsonErrorResponse> handleNotFoundException(NotFoundException e) {
+        return new ResponseEntity<>(new JsonErrorResponse("The requested resource not found!"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = Exception.class)

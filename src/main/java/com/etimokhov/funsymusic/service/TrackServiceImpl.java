@@ -144,7 +144,8 @@ public class TrackServiceImpl implements TrackService {
                 track.getArtist(),
                 track.getLength(),
                 track.getMediaFile(),
-                track.getUploader().getId()
+                track.getUploader().getId(),
+                track.getUploader().getUsername()
         );
     }
 

@@ -139,6 +139,7 @@ public class PlaylistServiceImpl implements PlaylistService {
                 playlist.getId(),
                 playlist.getName(),
                 playlist.getOwner().getId(),
+                playlist.getOwner().getUsername(),
                 playlist.getCreateDate()
         );
     }

@@ -13,17 +13,19 @@ public class TrackDto {
     private String mediaFileName;
 
     private Long uploaderId;
+    private String uploaderUsername;
 
     public TrackDto() {
     }
 
-    public TrackDto(Long id, String name, String artist, Integer length, String mediaFileName, Long uploaderId) {
+    public TrackDto(Long id, String name, String artist, Integer length, String mediaFileName, Long uploaderId, String uploaderUsername) {
         this.id = id;
         this.name = name;
         this.artist = artist;
         this.length = length;
         this.mediaFileName = mediaFileName;
         this.uploaderId = uploaderId;
+        this.uploaderUsername = uploaderUsername;
     }
 
     public Long getId() {
@@ -74,15 +76,11 @@ public class TrackDto {
         this.uploaderId = uploaderId;
     }
 
-    @Override
-    public String toString() {
-        return "TrackDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", artist='" + artist + '\'' +
-                ", length=" + length +
-                ", mediaFileName='" + mediaFileName + '\'' +
-                ", uploaderId=" + uploaderId +
-                '}';
+    public String getUploaderUsername() {
+        return uploaderUsername;
+    }
+
+    public void setUploaderUsername(String uploaderUsername) {
+        this.uploaderUsername = uploaderUsername;
     }
 }

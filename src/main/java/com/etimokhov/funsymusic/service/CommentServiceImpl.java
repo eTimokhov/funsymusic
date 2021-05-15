@@ -27,6 +27,7 @@ public class CommentServiceImpl implements CommentService {
         this.timeUtil = timeUtil;
     }
 
+    //OUTDATED
     @Override
     public TrackComment addTrackComment(AddTrackCommentDto commentDto, User user) {
         TrackComment trackComment = new TrackComment();
@@ -35,6 +36,17 @@ public class CommentServiceImpl implements CommentService {
         trackComment.setTrackTimestamp(commentDto.getTrackTimestamp());
         trackComment.setCommentDate(new Date());
         trackComment.setUser(user);
+        return trackCommentRepository.save(trackComment);
+    }
+
+    @Override
+    public TrackComment addTrackComment(AddTrackCommentDto commentDto, String username) {
+        TrackComment trackComment = new TrackComment();
+        trackComment.setTrack(trackService.getTrack(commentDto.getTrackId()));
+        trackComment.setText(commentDto.getText());
+        trackComment.setTrackTimestamp(commentDto.getTrackTimestamp());
+        trackComment.setCommentDate(new Date());
+        trackComment.setUser(userService.getByUsername(username));
         return trackCommentRepository.save(trackComment);
     }
 

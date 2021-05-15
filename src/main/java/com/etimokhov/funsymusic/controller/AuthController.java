@@ -8,6 +8,7 @@ import com.etimokhov.funsymusic.payload.response.MessageResponse;
 import com.etimokhov.funsymusic.repository.RoleRepository;
 import com.etimokhov.funsymusic.repository.UserRepository;
 import com.etimokhov.funsymusic.security.JwtUtils;
+import com.etimokhov.funsymusic.security.UserDetailsImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,13 +64,13 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-//                userDetails.getId(),
+                userDetails.getId(),
                 userDetails.getUsername(),
                 roles));
     }

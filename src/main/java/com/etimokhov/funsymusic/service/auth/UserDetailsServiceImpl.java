@@ -3,6 +3,7 @@ package com.etimokhov.funsymusic.service.auth;
 import com.etimokhov.funsymusic.model.Role;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.repository.UserRepository;
+import com.etimokhov.funsymusic.security.UserDetailsImpl;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,12 +26,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
 
-        //TODO: use java stream
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         for (Role role : user.getRoles()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
+        return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 }

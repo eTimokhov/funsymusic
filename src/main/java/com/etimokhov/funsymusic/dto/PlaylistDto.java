@@ -9,13 +9,15 @@ public class PlaylistDto {
     private String name;
 
     private Long ownerId;
+    private String ownerUsername;
 
     private Date createDate;
 
-    public PlaylistDto(Long id, String name, Long ownerId, Date createDate) {
+    public PlaylistDto(Long id, String name, Long ownerId, String ownerUsername, Date createDate) {
         this.id = id;
         this.name = name;
         this.ownerId = ownerId;
+        this.ownerUsername = ownerUsername;
         this.createDate = createDate;
     }
 
@@ -43,6 +45,13 @@ public class PlaylistDto {
         this.ownerId = ownerId;
     }
 
+    public String getOwnerUsername() {
+        return ownerUsername;
+    }
+
+    public void setOwnerUsername(String ownerUsername) {
+        this.ownerUsername = ownerUsername;
+    }
 
     public Date getCreateDate() {
         return createDate;
