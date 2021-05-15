@@ -77,10 +77,10 @@ public class PlaylistRestController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Object>> newPlaylist(@Valid @RequestBody PlaylistForm playlistForm, Principal principal) {
         Playlist playlist = playlistService.createPlaylist(playlistForm, principal.getName());
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("playlist", playlistService.mapToDto(playlist));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(
+                "status", "success",
+                "playlist", playlistService.mapToDto(playlist)
+        ), HttpStatus.OK);
     }
 
     @PostMapping("/playlist/addTrack")

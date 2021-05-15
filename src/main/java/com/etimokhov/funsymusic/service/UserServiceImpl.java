@@ -81,11 +81,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto mapToDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setUsername(user.getUsername());
-        userDto.setId(user.getId());
-        userDto.setImage(user.getImage());
-        return userDto;
+        return new UserDto(user.getId(), user.getUsername(), user.getImage(), user.getRegistrationDate());
     }
 
     @Override

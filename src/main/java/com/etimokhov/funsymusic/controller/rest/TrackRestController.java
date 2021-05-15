@@ -58,36 +58,34 @@ public class TrackRestController {
         response.put("currentPage", pageTracks.getNumber());
         response.put("totalItems", pageTracks.getTotalElements());
         response.put("totalPages", pageTracks.getTotalPages());
-        //response.put("userRequested", SecurityContextHolder.getContext().getAuthentication().toString());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/api/tracks/{id}")
     public ResponseEntity<Map<String, Object>> getTrack(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("track", trackService.mapToDto(trackService.getTrack(id)));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(
+                "track", trackService.mapToDto(trackService.getTrack(id))
+        ), HttpStatus.OK);
     }
 
     @PostMapping("/api/tracks/uploadFile")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Object>> uploadTrack(@RequestParam MultipartFile file) {
         TrackForm trackForm = trackService.processTrackFileUploading(file);
-        Map<String, Object> response = new HashMap<>();
-        response.put("trackInfo", trackForm);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(
+                "trackInfo", trackForm
+        ), HttpStatus.OK);
     }
 
     @PostMapping("/api/tracks")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Object>> saveTrack(@Valid @RequestBody TrackForm trackForm, Principal principal) {
         Track track = trackService.saveTrack(trackForm, principal.getName());
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", "success");
-        response.put("track", trackService.mapToDto(track));
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(Map.of(
+                "status", "success",
+                "track", trackService.mapToDto(track)
+        ), HttpStatus.OK);
     }
 
 }

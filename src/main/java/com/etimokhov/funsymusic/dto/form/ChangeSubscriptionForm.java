@@ -1,16 +1,10 @@
 package com.etimokhov.funsymusic.dto.form;
 
+import javax.validation.constraints.NotNull;
+
 public class ChangeSubscriptionForm {
-    private String username;
+    @NotNull
     private Action action;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public Action getAction() {
         return action;
