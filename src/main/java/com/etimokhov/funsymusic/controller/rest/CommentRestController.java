@@ -44,20 +44,10 @@ public class CommentRestController {
         this.commentService = commentService;
     }
 
-    @PostMapping("/track/addComment")
-    public ResponseEntity<String> addComment(@Valid @RequestBody AddTrackCommentDto commentDto, Principal principal) {
-        User currentUser = userService.getCurrentUser(principal);
-        commentService.addTrackComment(commentDto, currentUser);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/api/comments")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Map<String, Object>> addComment(@Valid @RequestBody AddTrackCommentDto commentDto) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
-
-        TrackComment comment = commentService.addTrackComment(commentDto, username);
+    public ResponseEntity<Map<String, Object>> addComment(@Valid @RequestBody AddTrackCommentDto commentDto, Principal principal) {
+        TrackComment comment = commentService.addTrackComment(commentDto, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("comment", commentService.mapToDto(comment));

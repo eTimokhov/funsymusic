@@ -9,6 +9,7 @@ import com.etimokhov.funsymusic.model.Playlist;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.payload.response.MessageResponse;
+import com.etimokhov.funsymusic.security.UserDetailsImpl;
 import com.etimokhov.funsymusic.service.PlaylistService;
 import com.etimokhov.funsymusic.service.TrackService;
 import com.etimokhov.funsymusic.service.UserService;
@@ -74,11 +75,8 @@ public class PlaylistRestController {
 
     @PostMapping("/api/playlists")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Map<String, Object>> newPlaylist(@Valid @RequestBody PlaylistForm playlistForm) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
-
-        Playlist playlist = playlistService.createPlaylist(playlistForm, username);
+    public ResponseEntity<Map<String, Object>> newPlaylist(@Valid @RequestBody PlaylistForm playlistForm, Principal principal) {
+        Playlist playlist = playlistService.createPlaylist(playlistForm, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("playlist", playlistService.mapToDto(playlist));

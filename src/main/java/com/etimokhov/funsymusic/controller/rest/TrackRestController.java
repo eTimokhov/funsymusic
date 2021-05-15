@@ -81,11 +81,8 @@ public class TrackRestController {
 
     @PostMapping("/api/tracks")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Map<String, Object>> saveTrack(@Valid @RequestBody TrackForm trackForm) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((org.springframework.security.core.userdetails.User) auth.getPrincipal()).getUsername();
-
-        Track track = trackService.saveTrack(trackForm, username);
+    public ResponseEntity<Map<String, Object>> saveTrack(@Valid @RequestBody TrackForm trackForm, Principal principal) {
+        Track track = trackService.saveTrack(trackForm, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("status", "success");
         response.put("track", trackService.mapToDto(track));
