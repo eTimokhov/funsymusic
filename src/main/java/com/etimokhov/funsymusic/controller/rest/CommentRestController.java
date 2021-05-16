@@ -1,6 +1,7 @@
 package com.etimokhov.funsymusic.controller.rest;
 
 import com.etimokhov.funsymusic.dto.AddTrackCommentDto;
+import com.etimokhov.funsymusic.dto.PlaylistDto;
 import com.etimokhov.funsymusic.dto.TrackCommentDto;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.TrackComment;
@@ -61,5 +62,18 @@ public class CommentRestController {
         return trackComments.stream()
                 .map(commentService::mapToDto)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/comments/by")
+    public ResponseEntity<Map<String, Object>> getComments(@RequestParam Long userId) {
+        User requestedUser = userService.getById(userId);
+        List<TrackCommentDto> comments = commentService.findLastTrackComments(requestedUser)
+                .stream()
+                .map(commentService::mapToDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(Map.of(
+                "comments", comments
+        ), HttpStatus.OK);
     }
 }

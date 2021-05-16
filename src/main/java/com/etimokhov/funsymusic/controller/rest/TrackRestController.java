@@ -4,18 +4,15 @@ import com.etimokhov.funsymusic.dto.TrackDto;
 import com.etimokhov.funsymusic.dto.form.TrackForm;
 import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
+import com.etimokhov.funsymusic.service.LikeService;
 import com.etimokhov.funsymusic.service.TrackService;
+import com.etimokhov.funsymusic.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -34,9 +32,13 @@ import java.util.stream.Collectors;
 public class TrackRestController {
 
     private final TrackService trackService;
+    private final LikeService likeService;
+    private final UserService userService;
 
-    public TrackRestController(TrackService trackService) {
+    public TrackRestController(TrackService trackService, LikeService likeService, UserService userService) {
         this.trackService = trackService;
+        this.likeService = likeService;
+        this.userService = userService;
     }
 
     @GetMapping("/api/tracks")
@@ -61,6 +63,20 @@ public class TrackRestController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/api/tracks/liked")
+    public ResponseEntity<Map<String, Object>> getLikedTracks(@RequestParam Long userId) {
+        User requestedUser = userService.getById(userId);
+        List<TrackDto> likedTracks = likeService.getLikedTracks(requestedUser)
+                .stream()
+                .map(trackService::mapToDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(Map.of(
+                "tracks", likedTracks
+        ), HttpStatus.OK);
+    }
+
 
     @GetMapping("/api/tracks/{id}")
     public ResponseEntity<Map<String, Object>> getTrack(@PathVariable Long id) {

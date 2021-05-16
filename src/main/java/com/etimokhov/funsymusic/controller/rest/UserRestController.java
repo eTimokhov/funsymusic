@@ -1,9 +1,10 @@
 package com.etimokhov.funsymusic.controller.rest;
 
 import com.etimokhov.funsymusic.dto.form.ChangeSubscriptionForm;
-import com.etimokhov.funsymusic.model.Track;
 import com.etimokhov.funsymusic.model.User;
 import com.etimokhov.funsymusic.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 public class UserRestController {
 
     private final UserService userService;
+
+    private final Logger LOG = LoggerFactory.getLogger(UserRestController.class);
 
     public UserRestController(UserService userService) {
         this.userService = userService;
@@ -78,6 +82,17 @@ public class UserRestController {
             userService.unsubscribeFrom(currentUser, targetUser);
         } else throw new IllegalArgumentException("Action is wrong.");
 
+        return new ResponseEntity<>(Map.of(
+                "status", "success"
+        ), HttpStatus.OK);
+    }
+
+    @PostMapping("/api/user/image")
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam MultipartFile file, Principal principal) {
+        User user = userService.getCurrentUser(principal);
+        LOG.info("Upload image request: file, {}, {} bytes", file.getName(), file.getSize());
+        userService.uploadImage(user, file);
         return new ResponseEntity<>(Map.of(
                 "status", "success"
         ), HttpStatus.OK);
