@@ -20,4 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Set<User> findAllBySubscriptions(User subscription);
 
     Page<User> findAllByOrderByRegistrationDateDesc(Pageable pageable);
+
+    @EntityGraph(attributePaths = "subscriptions")
+    Optional<User> findWithSubscriptionsById(Long userId);
 }

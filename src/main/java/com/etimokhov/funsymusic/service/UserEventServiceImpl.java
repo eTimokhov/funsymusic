@@ -64,13 +64,29 @@ public class UserEventServiceImpl implements UserEventService {
 
     }
 
+    //OUTDATED
     @Override
     public List<UserEventDto> getLastEvents(User user) {
         return getLastEvents(List.of(user.getId()));
     }
 
     @Override
+    public List<UserEventDto> getLastEvents(Long userId) {
+        return getLastEvents(List.of(userId));
+    }
+
+    //OUTDATED
+    @Override
     public List<UserEventDto> getLastEventsOfSubscriptions(User userWithSubscriptions) {
+        List<Long> subscriptionsId = userWithSubscriptions.getSubscriptions().stream()
+                .map(User::getId)
+                .collect(Collectors.toList());
+        return getLastEvents(subscriptionsId);
+    }
+
+    @Override
+    public List<UserEventDto> getLastEventsOfSubscriptions(Long userId) {
+        User userWithSubscriptions = userService.getByIdWithSubscriptions(userId);
         List<Long> subscriptionsId = userWithSubscriptions.getSubscriptions().stream()
                 .map(User::getId)
                 .collect(Collectors.toList());

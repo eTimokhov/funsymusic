@@ -121,6 +121,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByIdWithSubscriptions(Long userId) {
+        return userRepository.findWithSubscriptionsById(userId).orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
+    }
+
+    @Override
     public User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException {
         if (principal == null) {
             throw new NotAuthenticatedException();

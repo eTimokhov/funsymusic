@@ -34,6 +34,8 @@ public interface UserService {
 
     User getByUsernameWithSubscriptions(String username);
 
+    User getByIdWithSubscriptions(Long userId);
+
     User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException;
 
     Set<User> getSubscribers(User user);
