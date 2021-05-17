@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
         trackCommentDto.setText(trackComment.getText());
         trackCommentDto.setTrackId(trackComment.getTrack().getId());
         trackCommentDto.setTrackTimestamp(trackComment.getTrackTimestamp());
-        trackCommentDto.setCommentDateRel(timeUtil.convertToPrettyTime(trackComment.getCommentDate()));
+        trackCommentDto.setCommentDate(trackComment.getCommentDate());
         trackCommentDto.setUser(userService.mapToDto(trackComment.getUser()));
         return trackCommentDto;
     }

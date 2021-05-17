@@ -100,6 +100,7 @@ public class UserEventServiceImpl implements UserEventService {
         userEventDto.setTargetName(trackComment.getTrack().getName());
         userEventDto.setEventDate(trackComment.getCommentDate());
         userEventDto.setUser(userService.mapToDto(trackComment.getUser()));
+        userEventDto.setTargetText(trackComment.getText());
         return userEventDto;
     }
 

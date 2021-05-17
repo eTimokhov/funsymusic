@@ -19,6 +19,8 @@ public class UserEventDto {
 
     private Date eventDate;
 
+    private String targetText;
+
     public UserDto getUser() {
         return user;
     }
@@ -57,5 +59,13 @@ public class UserEventDto {
 
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public String getTargetText() {
+        return targetText;
+    }
+
+    public void setTargetText(String targetText) {
+        this.targetText = targetText;
     }
 }
