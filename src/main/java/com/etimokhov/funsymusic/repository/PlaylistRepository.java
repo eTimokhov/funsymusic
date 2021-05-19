@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
-    List<Playlist> findByOwnerId(Long userId);
+    List<Playlist> findByOwnerIdOrderByCreateDateDesc(Long userId);
 
     List<Playlist> findTop10ByOwnerIdInOrderByCreateDateDesc(List<Long> userIds);
 

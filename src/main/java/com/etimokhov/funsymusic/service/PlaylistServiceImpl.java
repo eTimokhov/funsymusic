@@ -72,7 +72,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public List<Playlist> findAllByOwner(Long userId) {
-        return playlistRepository.findByOwnerId(userId);
+        return playlistRepository.findByOwnerIdOrderByCreateDateDesc(userId);
     }
 
     @Override

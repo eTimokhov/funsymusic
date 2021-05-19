@@ -66,7 +66,7 @@ public class TrackServiceImpl implements TrackService {
             throw new CannotSaveFileException("Invalid file extension. Supported extension: mp3");
         }
         String mp3FileName;
-        byte[] mp3FileBytes = new byte[0];
+        byte[] mp3FileBytes;
         try {
             mp3FileBytes = trackFile.getBytes();
         } catch (IOException e) {
@@ -76,6 +76,7 @@ public class TrackServiceImpl implements TrackService {
         fillTrackFormWithMp3Metadata(trackForm, mp3FileBytes);
         try {
             mp3FileName = mediaFileUtil.saveMp3(mp3FileBytes);
+            mediaFileUtil.saveHls(mp3FileName);
         } catch (IOException e) {
             throw new CannotSaveFileException("Cannot save mp3 file.", e);
         }
@@ -143,7 +144,7 @@ public class TrackServiceImpl implements TrackService {
                 track.getName(),
                 track.getArtist(),
                 track.getLength(),
-                track.getMediaFile(),
+                mediaFileUtil.removeFileExt(track.getMediaFile()),
                 track.getUploader().getId(),
                 track.getUploader().getUsername()
         );
