@@ -105,17 +105,6 @@ public class TrackServiceImpl implements TrackService {
         trackForm.setLength(durationSeconds);
     }
 
-    //outdated
-    @Override
-    public Track saveTrack(TrackForm trackForm, User uploadedBy) {
-        Track track = mapTrackDtoToTrack(trackForm);
-        track.setUploader(uploadedBy);
-        track.setUploadDate(new Date());
-        track = trackRepository.save(track);
-        LOG.info("Track {} was successfully saved", track.getId());
-        return track;
-    }
-
     @Override
     public Track saveTrack(TrackForm trackForm, String uploadedByUsername) {
         Track track = mapTrackDtoToTrack(trackForm);
@@ -130,11 +119,6 @@ public class TrackServiceImpl implements TrackService {
     public String getMediaFileFullPath(Long trackId) {
         Track track = getTrack(trackId);
         return mediaFileUtil.getMp3FileFullPath(track.getMediaFile());
-    }
-
-    @Override
-    public List<Track> findAllByUploader(Long userId) {
-        return trackRepository.findByUploaderId(userId);
     }
 
     @Override

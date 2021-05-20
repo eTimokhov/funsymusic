@@ -15,13 +15,9 @@ public interface TrackService {
 
     TrackForm processTrackFileUploading(MultipartFile trackFile) throws CannotSaveFileException;
 
-    Track saveTrack(TrackForm trackForm, User uploadedBy);
-
     Track saveTrack(TrackForm trackForm, String uploadedByUsername);
 
     String getMediaFileFullPath(Long trackId);
-
-    List<Track> findAllByUploader(Long userId);
 
     TrackDto mapToDto(Track track);
 

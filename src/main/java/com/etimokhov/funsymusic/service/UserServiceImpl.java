@@ -72,14 +72,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findCurrentUser(Principal principal) {
-        if (principal == null) {
-            return null;
-        }
-        return findByUsername(principal.getName());
-    }
-
-    @Override
     public UserDto mapToDto(User user) {
         return new UserDto(user.getId(), user.getUsername(), user.getImage(), user.getRegistrationDate());
     }
@@ -123,19 +115,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByIdWithSubscriptions(Long userId) {
         return userRepository.findWithSubscriptionsById(userId).orElseThrow(() -> new NotFoundException("User " + userId + " not found"));
-    }
-
-    @Override
-    public User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException {
-        if (principal == null) {
-            throw new NotAuthenticatedException();
-        }
-        return getByUsernameWithSubscriptions(principal.getName());
-    }
-
-    @Override
-    public Set<User> getSubscribers(User user) {
-        return userRepository.findAllBySubscriptions(user);
     }
 
     @Override

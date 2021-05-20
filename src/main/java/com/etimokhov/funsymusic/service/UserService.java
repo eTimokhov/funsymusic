@@ -20,8 +20,6 @@ public interface UserService {
 
     User getCurrentUser(Principal principal) throws NotAuthenticatedException;
 
-    User findCurrentUser(Principal principal);
-
     UserDto mapToDto(User user);
 
     User getById(Long id);
@@ -35,10 +33,6 @@ public interface UserService {
     User getByUsernameWithSubscriptions(String username);
 
     User getByIdWithSubscriptions(Long userId);
-
-    User getCurrentUserWithSubscriptions(Principal principal) throws NotAuthenticatedException;
-
-    Set<User> getSubscribers(User user);
 
     boolean isSubscribed(User currentUser, User targetUser);
 

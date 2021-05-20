@@ -9,7 +9,6 @@ import com.etimokhov.funsymusic.model.User;
 import java.util.List;
 
 public interface CommentService {
-    TrackComment addTrackComment(AddTrackCommentDto commentDto, User user);
     TrackComment addTrackComment(AddTrackCommentDto commentDto, String username);
 
     List<TrackComment> findTrackComments(Track track);

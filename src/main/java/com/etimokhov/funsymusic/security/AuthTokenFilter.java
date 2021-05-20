@@ -1,7 +1,6 @@
 package com.etimokhov.funsymusic.security;
 
-import com.etimokhov.funsymusic.service.auth.UserDetailsServiceImpl;
-import com.etimokhov.funsymusic.util.MediaFileUtil;
+import com.etimokhov.funsymusic.service.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

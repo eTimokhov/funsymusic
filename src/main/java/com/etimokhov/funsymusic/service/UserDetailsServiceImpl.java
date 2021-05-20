@@ -1,4 +1,4 @@
-package com.etimokhov.funsymusic.service.auth;
+package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.model.Role;
 import com.etimokhov.funsymusic.model.User;

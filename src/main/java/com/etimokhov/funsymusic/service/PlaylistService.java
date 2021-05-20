@@ -15,7 +15,6 @@ public interface PlaylistService {
 
     Playlist getPlaylistWithTracks(Long id);
 
-    Playlist createPlaylist(PlaylistForm playlistForm, User owner);
     Playlist createPlaylist(PlaylistForm playlistForm, String ownerUsername);
 
     List<Playlist> findAllByOwner(Long userId);
@@ -27,8 +26,6 @@ public interface PlaylistService {
     void removeFromPlaylist(Playlist playlist, Track track);
 
     List<IsTrackInPlaylistDto> checkTrackPresenceInUserPlaylists(Track track, User user);
-
-    List<Track> getTracks(Long playlistId);
 
     void updatePlaylist(Playlist playlist, List<Long> trackIds);
 

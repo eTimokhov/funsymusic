@@ -48,18 +48,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    //TODO: outdated
-    public Playlist createPlaylist(PlaylistForm playlistForm, User owner) {
-        Playlist playlist = new Playlist();
-        playlist.setName(playlistForm.getName());
-        playlist.setOwner(owner);
-        playlist.setCreateDate(new Date());
-        playlist = playlistRepository.save(playlist);
-        LOG.info("Playlist #{}: {} was successfully created", playlist.getId(), playlist.getName());
-        return playlistRepository.save(playlist);
-    }
-
-    @Override
     public Playlist createPlaylist(PlaylistForm playlistForm, String ownerUsername) {
         Playlist playlist = new Playlist();
         playlist.setName(playlistForm.getName());
@@ -106,12 +94,6 @@ public class PlaylistServiceImpl implements PlaylistService {
                         pl -> new IsTrackInPlaylistDto(pl.getId(), pl.getName(), playlistContainsTrack(pl, track))
                 )
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Track> getTracks(Long playlistId) {
-        //TODO: implementation
-        return Collections.emptyList();
     }
 
     @Override
