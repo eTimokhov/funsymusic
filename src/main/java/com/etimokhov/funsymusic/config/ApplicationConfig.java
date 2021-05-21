@@ -18,12 +18,17 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Value("${funsymusic.hlsDirectory}")
     private String hlsDirectory;
 
+    @Value("${funsymusic.mp3Directory}")
+    private String mp3Directory;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:/" + FilenameUtils.concat(mediaStorageDirectory, imagesDirectory) + "/");
         registry.addResourceHandler("/hls/**")
                 .addResourceLocations("file:/" + FilenameUtils.concat(mediaStorageDirectory, hlsDirectory) + "/");
+        registry.addResourceHandler("/music/**")
+                .addResourceLocations("file:/" + FilenameUtils.concat(mediaStorageDirectory, mp3Directory) + "/");
     }
 
     @Override

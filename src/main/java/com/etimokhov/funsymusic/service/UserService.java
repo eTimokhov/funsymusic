@@ -1,7 +1,6 @@
 package com.etimokhov.funsymusic.service;
 
 import com.etimokhov.funsymusic.dto.UserDto;
-import com.etimokhov.funsymusic.dto.form.UserForm;
 import com.etimokhov.funsymusic.exception.InvalidImageException;
 import com.etimokhov.funsymusic.exception.NotAuthenticatedException;
 import com.etimokhov.funsymusic.model.User;
@@ -9,10 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
-import java.util.Set;
 
 public interface UserService {
-    User save(UserForm user);
 
     User findByUsername(String username);
 
