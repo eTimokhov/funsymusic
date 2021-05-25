@@ -87,7 +87,7 @@ public class UserRestController {
         ), HttpStatus.OK);
     }
 
-    @PostMapping("/api/user/image")
+    @PostMapping("/api/users/image")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam MultipartFile file, Principal principal) {
         User user = userService.getCurrentUser(principal);
